@@ -2,18 +2,17 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:svga_player_flutter/svgaplayer/parser.dart';
 import 'package:svga_player_flutter/svgaplayer/player.dart';
 import 'package:svga_player_flutter/svgaplayer/proto/svga.pb.dart';
+import 'package:svga_player_flutter/svgaplayer/svga_source.dart';
 import 'package:svga_player_flutter/svgaplayer/utils.dart';
 
 class SVGASampleScreen extends StatefulWidget {
-  final String? name;
-  final String image;
+  final SVGASource source;
+
   final void Function(MovieEntity entity)? dynamicCallback;
 
-  const SVGASampleScreen(
-      {Key? key, required this.image, this.name, this.dynamicCallback})
+  const SVGASampleScreen({Key? key, required this.source, this.dynamicCallback})
       : super(key: key);
 
   @override
@@ -37,8 +36,8 @@ class _SVGASampleScreenState extends State<SVGASampleScreen>
   @override
   void initState() {
     super.initState();
-    this.animationController = SVGAAnimationController(vsync: this);
-    this._loadAnimation();
+    animationController = SVGAAnimationController(vsync: this);
+    _loadAnimation();
   }
 
   @override
@@ -50,21 +49,21 @@ class _SVGASampleScreenState extends State<SVGASampleScreen>
 
   @override
   void dispose() {
-    this.animationController?.dispose();
-    this.animationController = null;
+    animationController?.dispose();
+    animationController = null;
     super.dispose();
   }
 
   void _loadAnimation() async {
     // FIXME: may throw error on loading
-    final videoItem = await _loadVideoItem(widget.image);
+    final videoItem = await loadVideoItem(widget.source);
     if (widget.dynamicCallback != null) {
       widget.dynamicCallback!(videoItem);
     }
     if (mounted) {
       setState(() {
-        this.isLoading = false;
-        this.animationController?.videoItem = videoItem;
+        isLoading = false;
+        animationController?.videoItem = videoItem;
         _playAnimation();
       });
     }
@@ -80,19 +79,19 @@ class _SVGASampleScreenState extends State<SVGASampleScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.name ?? "")),
+      appBar: AppBar(title: Text(widget.source.name ?? "")),
       body: Stack(
         children: <Widget>[
           Container(
               padding: const EdgeInsets.all(8.0),
-              child: Text("Url: ${widget.image}",
-                  style: Theme.of(context).textTheme.subtitle2)),
+              child: Text("Source: ${widget.source.toString()}",
+                  style: Theme.of(context).textTheme.titleSmall)),
           if (isLoading) const LinearProgressIndicator(),
           Center(
             child: ColoredBox(
               color: backgroundColor,
               child: SVGAImage(
-                this.animationController!,
+                animationController!,
                 fit: fit,
                 clearsAfterStop: false,
                 allowDrawingOverflow: allowOverflow,
@@ -166,6 +165,7 @@ class _SVGASampleScreenState extends State<SVGASampleScreen>
                       onChanged: (v) {
                         if (animationController?.isAnimating == true) {
                           animationController?.stop();
+                          setState(() {});
                         }
                         animationController?.value =
                             v / animationController!.frames;
@@ -218,7 +218,8 @@ class _SVGASampleScreenState extends State<SVGASampleScreen>
                 ],
               ),
               const SizedBox(height: 8),
-              Text('Original size: (${animationController!.width} x ${animationController!.height})'),
+              Text(
+                  'Original size: (${animationController!.width} x ${animationController!.height})'),
               const SizedBox(height: 8),
               Text('Container options: ($containerWidth x $containerHeight)'),
               Row(
@@ -318,14 +319,4 @@ class _SVGASampleScreenState extends State<SVGASampleScreen>
       ),
     );
   }
-}
-
-Future _loadVideoItem(String image) {
-  Future Function(String) decoder;
-  if (image.startsWith(RegExp(r'https?://'))) {
-    decoder = SVGAParser.shared.decodeFromURL;
-  } else {
-    decoder = SVGAParser.shared.decodeFromAssets;
-  }
-  return decoder(image);
 }

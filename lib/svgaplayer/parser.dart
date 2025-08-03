@@ -1,6 +1,6 @@
 import 'dart:developer';
+import 'dart:io';
 import 'dart:ui' as ui;
-import 'dart:typed_data' show Uint8List;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart' show decodeImageFromList;
 import 'package:flutter/services.dart' show rootBundle;
@@ -25,6 +25,11 @@ class SVGAParser {
   /// Download animation file from bundle assets, and decode it.
   Future<MovieEntity> decodeFromAssets(String path) async {
     return decodeFromBuffer((await rootBundle.load(path)).buffer.asUint8List());
+  }
+
+  /// Decode animation file from local file, and decode it.
+  Future<MovieEntity> decodeFromFile(File file) async {
+    return decodeFromBuffer(await file.readAsBytes());
   }
 
   /// Download animation file from buffer, and decode it.

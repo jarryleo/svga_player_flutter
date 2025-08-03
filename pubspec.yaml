@@ -31,9 +31,10 @@ dependencies:
   flutter:
     sdk: flutter
   protobuf: ^2.0.0
-  http: ^0.13.3
-  path_drawing: ^1.0.0
+  http: ^1.0.0
+  path_drawing: ^1.0.1
   archive: ^3.1.2
+  window_manager: ^0.3.0
 
 
   # The following adds the Cupertino Icons font to your application.
