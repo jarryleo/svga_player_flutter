@@ -1,15 +1,18 @@
 library svgaplayer_flutter_player;
 
 import 'dart:math';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
-// ignore: import_of_legacy_library_into_null_safe
-// ignore: import_of_legacy_library_into_null_safe
-import 'proto/svga.pbserver.dart';
 import 'dart:typed_data';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:path_drawing/path_drawing.dart';
+import 'package:svga_player_flutter/svgaplayer/utils.dart';
+
 import 'parser.dart';
+import 'proto/svga.pbserver.dart';
+
 part 'painter.dart';
+
 part 'simple_player.dart';
 
 class SVGAImage extends StatefulWidget {
@@ -30,9 +33,10 @@ class SVGAImage extends StatefulWidget {
   final bool? allowDrawingOverflow;
 
   /// If `null`, the viewbox size of [MovieEntity] will be use.
-  /// 
+  ///
   /// Defaults to null.
   final Size? preferredSize;
+
   const SVGAImage(
     this._controller, {
     Key? key,
@@ -113,6 +117,46 @@ class SVGAAnimationController extends AnimationController {
     return videoItem.params.frames;
   }
 
+  double get width {
+    final videoItem = _videoItem;
+    if (videoItem == null) return 0;
+    return videoItem.params.viewBoxWidth;
+  }
+
+  double get height {
+    final videoItem = _videoItem;
+    if (videoItem == null) return 0;
+    return videoItem.params.viewBoxHeight;
+  }
+
+  //get fps
+  int get fps {
+    final videoItem = _videoItem;
+    if (videoItem == null) return 0;
+    return videoItem.params.fps;
+  }
+
+  //get memory
+  int get memory {
+    final videoItem = _videoItem;
+    if (videoItem == null) return 0;
+    int size = 0;
+    videoItem.bitmapCache.values.forEach((element) {
+      size += estimateImageMemory(element);
+    });
+    videoItem.dynamicItem.dynamicImages.values.forEach((element) {
+      size += estimateImageMemory(element);
+    });
+    return size;
+  }
+
+  //获取精灵名称列表
+  List<String> get spriteKeys{
+    final videoItem = _videoItem;
+    if (videoItem == null) return [];
+    return videoItem.bitmapCache.keys.toList();
+  }
+
   /// mark [_SVGAPainter] needs clear
   void clear() {
     _canvasNeedsClear = true;
@@ -127,6 +171,7 @@ class SVGAAnimationController extends AnimationController {
   }
 
   bool _isDisposed = false;
+
   @override
   void dispose() {
     // auto dispose _videoItem when set null
@@ -138,6 +183,7 @@ class SVGAAnimationController extends AnimationController {
 
 class _SVGAImageState extends State<SVGAImage> {
   MovieEntity? video;
+
   @override
   void initState() {
     super.initState();

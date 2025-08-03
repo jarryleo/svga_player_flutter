@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:svga_player_flutter/svgaplayer/parser.dart';
 import 'package:svga_player_flutter/svgaplayer/player.dart';
 import 'package:svga_player_flutter/svgaplayer/proto/svga.pb.dart';
+import 'package:svga_player_flutter/svgaplayer/utils.dart';
 
 class SVGASampleScreen extends StatefulWidget {
   final String? name;
@@ -86,7 +87,7 @@ class _SVGASampleScreenState extends State<SVGASampleScreen>
               padding: const EdgeInsets.all(8.0),
               child: Text("Url: ${widget.image}",
                   style: Theme.of(context).textTheme.subtitle2)),
-          if (isLoading) LinearProgressIndicator(),
+          if (isLoading) const LinearProgressIndicator(),
           Center(
             child: ColoredBox(
               color: backgroundColor,
@@ -125,7 +126,7 @@ class _SVGASampleScreenState extends State<SVGASampleScreen>
     return Container(
       width: 240,
       color: Colors.black12,
-      padding: EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8.0),
       child: SliderTheme(
         data: SliderTheme.of(context).copyWith(
           showValueIndicator: ShowValueIndicator.always,
@@ -144,14 +145,14 @@ class _SVGASampleScreenState extends State<SVGASampleScreen>
                   });
                 },
                 icon: hideOptions
-                    ? Icon(Icons.arrow_drop_up)
-                    : Icon(Icons.arrow_drop_down),
+                    ? const Icon(Icons.arrow_drop_up)
+                    : const Icon(Icons.arrow_drop_down),
                 label: Text(hideOptions ? 'Show options' : 'Hide options')),
             AnimatedBuilder(
                 animation: animationController!,
                 builder: (context, child) {
                   return Text(
-                      'Current frame: ${animationController!.currentFrame + 1}/${animationController!.frames}');
+                      'Current frame: ${animationController!.currentFrame + 1}/${animationController!.frames} (FPS:${animationController!.fps})');
                 }),
             if (!hideOptions) ...[
               AnimatedBuilder(
@@ -171,10 +172,19 @@ class _SVGASampleScreenState extends State<SVGASampleScreen>
                       },
                     );
                   }),
+              const SizedBox(height: 8),
+              AnimatedBuilder(
+                  animation: animationController!,
+                  builder: (context, child) {
+                    int size = animationController!.memory;
+                    String format = formatFileSize(size);
+                    return Text('memory: $format ($size)');
+                  }),
+              const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Image filter quality'),
+                  const Text('Image filter quality'),
                   DropdownButton<FilterQuality>(
                     value: filterQuality,
                     onChanged: (FilterQuality? newValue) {
@@ -195,7 +205,7 @@ class _SVGASampleScreenState extends State<SVGASampleScreen>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Allow drawing overflow'),
+                  const Text('Allow drawing overflow'),
                   const SizedBox(width: 8),
                   Switch(
                     value: allowOverflow,
@@ -207,11 +217,14 @@ class _SVGASampleScreenState extends State<SVGASampleScreen>
                   )
                 ],
               ),
-              Text('Container options:'),
+              const SizedBox(height: 8),
+              Text('Original size: (${animationController!.width} x ${animationController!.height})'),
+              const SizedBox(height: 8),
+              Text('Container options: ($containerWidth x $containerHeight)'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(' width:'),
+                  const Text(' width:'),
                   Slider(
                     min: 100,
                     max: MediaQuery.of(context).size.width.roundToDouble(),
@@ -228,7 +241,7 @@ class _SVGASampleScreenState extends State<SVGASampleScreen>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(' height:'),
+                  const Text(' height:'),
                   Slider(
                     min: 100,
                     max: MediaQuery.of(context).size.height.roundToDouble(),
@@ -245,7 +258,7 @@ class _SVGASampleScreenState extends State<SVGASampleScreen>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(' box fit: '),
+                  const Text(' box fit: '),
                   const SizedBox(width: 8),
                   DropdownButton<BoxFit>(
                     value: fit,

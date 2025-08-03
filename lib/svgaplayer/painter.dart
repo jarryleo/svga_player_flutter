@@ -33,6 +33,14 @@ class _SVGAPainter extends CustomPainter {
     try {
       final canvasRect = Offset.zero & size;
       if (clipRect) canvas.clipRect(canvasRect);
+      //绘制边框
+      canvas.drawRect(
+          canvasRect,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..color = Colors.white
+            ..strokeWidth = 1.0
+      );
       scaleCanvasToViewBox(canvas, canvasRect, Offset.zero & viewBoxSize);
       drawSprites(canvas, size);
     } finally {
