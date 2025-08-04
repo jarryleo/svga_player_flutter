@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:svga_player_flutter/svgaplayer/svga_source.dart';
 import 'package:svga_player_flutter/svgaplayer/svgaplayer_flutter.dart';
+import 'package:svga_player_flutter/widget/drag_file.dart';
 
 import 'svga_viewer.dart';
 
@@ -51,16 +54,26 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('SVGA Flutter Samples')),
-      body: ListView.separated(
-          itemCount: samples.length,
-          separatorBuilder: (_, __) => const Divider(),
-          itemBuilder: (context, index) {
-            return ListTile(
-                title: Text(samples[index].first),
-                subtitle: Text(samples[index].last),
-                onTap: () => _goToSample(context, samples[index]));
-          }),
+      appBar: AppBar(title: const Text('SVGA Viewer by Jarry Leo')),
+      body: DragFile(
+          content: ListView.separated(
+              itemCount: samples.length,
+              separatorBuilder: (_, __) => const Divider(),
+              itemBuilder: (context, index) {
+                return ListTile(
+                    title: Text(samples[index].first),
+                    subtitle: Text(samples[index].last),
+                    onTap: () => _goToSample(context, samples[index]));
+              }),
+        onDragDone: (detail) {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            String name = detail.first.name;
+            String path = detail.first.path;
+            SVGASource source = SVGASource.network(name, path);
+            return SVGASampleScreen(source: source);
+          }));
+        },
+      ),
     );
   }
 
