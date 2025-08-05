@@ -3,17 +3,22 @@ part of svgaplayer_flutter_player;
 class _SVGAPainter extends CustomPainter {
   final BoxFit fit;
   final SVGAAnimationController controller;
+
   int get currentFrame => controller.currentFrame;
+
   MovieEntity get videoItem => controller.videoItem!;
   final FilterQuality filterQuality;
 
   /// Guaranteed to draw within the canvas bounds
   final bool clipRect;
+  final bool showBorder;
+
   _SVGAPainter(
     this.controller, {
     this.fit = BoxFit.contain,
     this.filterQuality = FilterQuality.low,
     this.clipRect = true,
+    this.showBorder = false,
   })  : assert(
             controller.videoItem != null, 'Invalid SVGAAnimationController!'),
         super(repaint: controller);
@@ -34,13 +39,14 @@ class _SVGAPainter extends CustomPainter {
       final canvasRect = Offset.zero & size;
       if (clipRect) canvas.clipRect(canvasRect);
       //绘制边框
-      canvas.drawRect(
-          canvasRect,
-          Paint()
-            ..style = PaintingStyle.stroke
-            ..color = Colors.white
-            ..strokeWidth = 1.0
-      );
+      if(showBorder) {
+        canvas.drawRect(
+            canvasRect,
+            Paint()
+              ..style = PaintingStyle.stroke
+              ..color = Colors.white
+              ..strokeWidth = 1.0);
+      }
       scaleCanvasToViewBox(canvas, canvasRect, Offset.zero & viewBoxSize);
       drawSprites(canvas, size);
     } finally {

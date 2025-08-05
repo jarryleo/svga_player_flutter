@@ -12,7 +12,6 @@ import 'parser.dart';
 import 'proto/svga.pbserver.dart';
 
 part 'painter.dart';
-
 part 'simple_player.dart';
 
 class SVGAImage extends StatefulWidget {
@@ -32,6 +31,8 @@ class SVGAImage extends StatefulWidget {
   /// which means allow drawing to overflow canvas bounds.
   final bool? allowDrawingOverflow;
 
+  final bool? showBorder;
+
   /// If `null`, the viewbox size of [MovieEntity] will be use.
   ///
   /// Defaults to null.
@@ -43,6 +44,7 @@ class SVGAImage extends StatefulWidget {
     this.fit = BoxFit.contain,
     this.filterQuality = FilterQuality.low,
     this.allowDrawingOverflow,
+    this.showBorder = false,
     this.clearsAfterStop = true,
     this.preferredSize,
   }) : super(key: key);
@@ -151,7 +153,7 @@ class SVGAAnimationController extends AnimationController {
   }
 
   //获取精灵名称列表
-  List<String> get spriteKeys{
+  List<String> get spriteKeys {
     final videoItem = _videoItem;
     if (videoItem == null) return [];
     return videoItem.bitmapCache.keys.toList();
@@ -256,6 +258,7 @@ class _SVGAImageState extends State<SVGAImage> {
           filterQuality: widget.filterQuality,
           // default is allowing overflow for backward compatibility
           clipRect: widget.allowDrawingOverflow == false,
+          showBorder: widget.showBorder == true,
         ),
         size: preferredSize,
       ),

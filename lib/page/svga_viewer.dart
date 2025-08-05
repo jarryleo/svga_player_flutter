@@ -25,6 +25,7 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
   bool isLoading = true;
   Color backgroundColor = Colors.transparent;
   bool allowOverflow = true;
+  bool showBorder = false;
 
   // Canvaskit need FilterQuality.high
   FilterQuality filterQuality = kIsWeb ? FilterQuality.high : FilterQuality.low;
@@ -101,6 +102,7 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
                 fit: fit,
                 clearsAfterStop: false,
                 allowDrawingOverflow: allowOverflow,
+                showBorder: showBorder,
                 filterQuality: filterQuality,
                 preferredSize: Size(containerWidth, containerHeight),
               ),
@@ -204,6 +206,22 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
                         child: Text(value.toString().split('.').last),
                       );
                     }).toList(),
+                  )
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Show Border'),
+                  const SizedBox(width: 8),
+                  Switch(
+                    value: showBorder,
+                    onChanged: (v) {
+                      setState(() {
+                        showBorder = v;
+                      });
+                    },
                   )
                 ],
               ),
