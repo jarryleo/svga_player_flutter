@@ -7,19 +7,19 @@ import 'package:svga_player_flutter/svgaplayer/proto/svga.pb.dart';
 import 'package:svga_player_flutter/svgaplayer/svga_source.dart';
 import 'package:svga_player_flutter/svgaplayer/utils.dart';
 
-class SVGASampleScreen extends StatefulWidget {
+class SVGAViewerPage extends StatefulWidget {
   final SVGASource source;
 
   final void Function(MovieEntity entity)? dynamicCallback;
 
-  const SVGASampleScreen({Key? key, required this.source, this.dynamicCallback})
+  const SVGAViewerPage({Key? key, required this.source, this.dynamicCallback})
       : super(key: key);
 
   @override
-  _SVGASampleScreenState createState() => _SVGASampleScreenState();
+  _SVGAViewerPageState createState() => _SVGAViewerPageState();
 }
 
-class _SVGASampleScreenState extends State<SVGASampleScreen>
+class _SVGAViewerPageState extends State<SVGAViewerPage>
     with SingleTickerProviderStateMixin {
   SVGAAnimationController? animationController;
   bool isLoading = true;
@@ -43,8 +43,10 @@ class _SVGASampleScreenState extends State<SVGASampleScreen>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    containerWidth = math.min(350, MediaQuery.of(context).size.width);
-    containerHeight = math.min(350, MediaQuery.of(context).size.height);
+    containerWidth = math.min(
+        animationController?.width ?? 350, MediaQuery.of(context).size.width);
+    containerHeight = math.min(
+        animationController?.height ?? 350, MediaQuery.of(context).size.height);
   }
 
   @override
@@ -64,6 +66,10 @@ class _SVGASampleScreenState extends State<SVGASampleScreen>
       setState(() {
         isLoading = false;
         animationController?.videoItem = videoItem;
+        containerWidth = math.min(
+            animationController?.width ?? 350, MediaQuery.of(context).size.width);
+        containerHeight = math.min(
+            animationController?.height ?? 350, MediaQuery.of(context).size.height);
         _playAnimation();
       });
     }

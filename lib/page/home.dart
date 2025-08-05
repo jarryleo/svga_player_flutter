@@ -70,7 +70,7 @@ class HomeScreen extends StatelessWidget {
             String name = detail.first.name;
             String path = detail.first.path;
             SVGASource source = SVGASource.network(name, path);
-            return SVGASampleScreen(source: source);
+            return SVGAViewerPage(source: source);
           }));
         },
       ),
@@ -87,7 +87,7 @@ class HomeScreen extends StatelessWidget {
       } else {
         source = SVGASource.asset(name, value);
       }
-      return SVGASampleScreen(
+      return SVGAViewerPage(
           source: source, dynamicCallback: dynamicSamples[sample.first]);
     }));
   }

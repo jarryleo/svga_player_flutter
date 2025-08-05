@@ -119,13 +119,13 @@ class SVGAAnimationController extends AnimationController {
 
   double get width {
     final videoItem = _videoItem;
-    if (videoItem == null) return 0;
+    if (videoItem == null) return 350;
     return videoItem.params.viewBoxWidth;
   }
 
   double get height {
     final videoItem = _videoItem;
-    if (videoItem == null) return 0;
+    if (videoItem == null) return 350;
     return videoItem.params.viewBoxHeight;
   }
 
@@ -141,12 +141,12 @@ class SVGAAnimationController extends AnimationController {
     final videoItem = _videoItem;
     if (videoItem == null) return 0;
     int size = 0;
-    videoItem.bitmapCache.values.forEach((element) {
+    for (var element in videoItem.bitmapCache.values) {
       size += estimateImageMemory(element);
-    });
-    videoItem.dynamicItem.dynamicImages.values.forEach((element) {
+    }
+    for (var element in videoItem.dynamicItem.dynamicImages.values) {
       size += estimateImageMemory(element);
-    });
+    }
     return size;
   }
 

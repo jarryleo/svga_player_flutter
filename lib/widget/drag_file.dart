@@ -12,8 +12,6 @@ class DragFile extends StatefulWidget {
 }
 
 class _DragFileState extends State<DragFile> {
-  final List<DropItem> _list = [];
-
   bool _dragging = false;
 
   @override
@@ -21,13 +19,11 @@ class _DragFileState extends State<DragFile> {
     return DropTarget(
       onDragDone: (detail) {
         setState(() {
-          _list.addAll(detail.files);
-          widget.onDragDone?.call(_list);
+          widget.onDragDone?.call(detail.files);
         });
       },
       onDragEntered: (detail) {
         setState(() {
-          _list.clear();
           _dragging = true;
         });
       },
