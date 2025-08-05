@@ -1,9 +1,10 @@
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
+import 'package:svga_player_flutter/page/main_page.dart';
 
 class DragFile extends StatefulWidget {
   final Widget? content;
-  final void Function(List<DropItem>)? onDragDone;
+  final void Function(List<FileItem>)? onDragDone;
 
   const DragFile({Key? key, this.content, this.onDragDone}) : super(key: key);
 
@@ -19,7 +20,8 @@ class _DragFileState extends State<DragFile> {
     return DropTarget(
       onDragDone: (detail) {
         setState(() {
-          widget.onDragDone?.call(detail.files);
+          var fileList = detail.files.map((e) => FileItem(name: e.name, path: e.path)).toList();
+          widget.onDragDone?.call(fileList);
         });
       },
       onDragEntered: (detail) {

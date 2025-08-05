@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:svga_player_flutter/page/file_list.dart';
+import 'package:svga_player_flutter/page/main_page.dart';
 import 'package:svga_player_flutter/utils/platform_utils.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -31,6 +31,6 @@ class ExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(theme: ThemeData.dark(), home: FileList());
+    return MaterialApp(theme: ThemeData.dark(), home: MainPage());
   }
 }
