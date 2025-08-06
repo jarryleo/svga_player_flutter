@@ -96,25 +96,28 @@ class _MainPageState extends State<MainPage> {
           builder: (context, setState) {
             return AlertDialog(
               title: const Text('Input svga url'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    controller: urlController,
-                    decoration: const InputDecoration(
-                      hintText: 'please input svga url~',
-                      labelText: 'URL',
-                    ),
-                  ),
-                  if (errorMessage != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        errorMessage!,
-                        style: const TextStyle(color: Colors.red),
+              content: SizedBox(
+                width: 400,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: urlController,
+                      decoration: const InputDecoration(
+                        hintText: 'please input svga url~',
+                        labelText: 'URL',
                       ),
                     ),
-                ],
+                    if (errorMessage != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          errorMessage!,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ),
+                  ],
+                ),
               ),
               actions: [
                 TextButton(

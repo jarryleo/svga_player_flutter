@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:svga_player_flutter/utils/snack_bar.dart';
 
 import '../svgaplayer/utils.dart';
 
@@ -94,7 +96,7 @@ class _SpriteInfoWidgetState extends State<SpriteInfoWidget> {
           builder: (context, setState) {
             return AlertDialog(
               title: const Text('Text Style'),
-              content: Container(
+              content: SizedBox(
                 width: 400,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -191,7 +193,7 @@ class _SpriteInfoWidgetState extends State<SpriteInfoWidget> {
       children: [
         // 第一行：显示名称
         Text(
-          'key: ${widget.spriteInfo.name}, size: $width x $height , memory: $format ($size)',
+          'key: ${widget.spriteInfo.name} , size: $width x $height , memory: $format ($size)',
           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
         ),
         // 第二行：文字输入相关
@@ -318,6 +320,17 @@ class _SpriteInfoWidgetState extends State<SpriteInfoWidget> {
                     ],
                   ),
                   const Spacer(),
+                  ElevatedButton(
+                    onPressed: () {
+                      var key = widget.spriteInfo.name;
+                      //复制到剪切板
+                      Clipboard.setData(ClipboardData(text: key));
+                      //提示复制成功
+                      showToast(context, "copied!");
+                    },
+                    child: const Text('Copy Key'),
+                  ),
+                  const SizedBox(width: 10),
                   // 中间清除按钮
                   ElevatedButton(
                     onPressed: () {

@@ -244,14 +244,14 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
 
   Widget _buildOptions(BuildContext context) {
     return Container(
-      width: 240,
+      width: 260,
       decoration: const BoxDecoration(
         color: Colors.black38,
         borderRadius: BorderRadius.horizontal(
           right: Radius.circular(8),
         ),
       ),
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(16.0),
       child: SliderTheme(
         data: SliderTheme.of(context).copyWith(
           showValueIndicator: ShowValueIndicator.always,
@@ -273,6 +273,7 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
                     ? const Icon(Icons.arrow_drop_up)
                     : const Icon(Icons.arrow_drop_down),
                 label: Text(hideOptions ? 'Show options' : 'Hide options')),
+            const SizedBox(height: 8),
             AnimatedBuilder(
                 animation: animationController!,
                 builder: (context, child) {
@@ -304,7 +305,7 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
                   builder: (context, child) {
                     int size = animationController!.memory;
                     String format = formatFileSize(size);
-                    return Text('memory: $format ($size)');
+                    return Text('Memory: $format ($size)');
                   }),
               const SizedBox(height: 8),
               Row(
@@ -419,6 +420,7 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
                   )
                 ],
               ),
+              const SizedBox(width: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: const [
@@ -455,6 +457,7 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
                     )
                     .toList(),
               ),
+              const SizedBox(width: 16),
             ],
           ],
         ),
