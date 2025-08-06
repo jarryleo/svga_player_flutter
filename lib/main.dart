@@ -3,8 +3,6 @@ import 'package:svga_player_flutter/page/main_page.dart';
 import 'package:svga_player_flutter/utils/platform_utils.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'page/home.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (PlatFormUtils.isDesktop()) {

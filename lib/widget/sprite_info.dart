@@ -119,9 +119,9 @@ class _SpriteInfoWidgetState extends State<SpriteInfoWidget> {
                               color: color,
                               child: widget.spriteInfo.textColor == color
                                   ? Icon(Icons.check,
-                                  color: color.computeLuminance() > 0.5
-                                      ? Colors.black
-                                      : Colors.white)
+                                      color: color.computeLuminance() > 0.5
+                                          ? Colors.black
+                                          : Colors.white)
                                   : null,
                             ),
                           );
@@ -143,7 +143,8 @@ class _SpriteInfoWidgetState extends State<SpriteInfoWidget> {
                             },
                             child: Container(
                               margin: const EdgeInsets.all(4),
-                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 border: Border.all(
@@ -203,27 +204,29 @@ class _SpriteInfoWidgetState extends State<SpriteInfoWidget> {
               margin: const EdgeInsets.only(bottom: 10),
               child: Row(
                 children: [
-                  const Text('Text:'),
+                  const SizedBox(
+                    width: 45,
+                    child: Text('Text:'),
+                  ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: TextField(
-                      controller: _textController,
-                      onChanged: (text) {
-                        setState(() {
-                          widget.spriteInfo.text = text;
-                        });
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'input dynamic text',
-                        border: const OutlineInputBorder(),
-                        labelStyle: TextStyle(
-                          color: widget.spriteInfo.textColor,
-                          fontSize: widget.spriteInfo.textSize,
+                    child: SizedBox(
+                      height: 42.0,
+                      child: TextField(
+                        controller: _textController,
+                        onChanged: (text) {
+                          setState(() {
+                            widget.spriteInfo.text = text;
+                          });
+                        },
+                        decoration: const InputDecoration(
+                          hintText: 'input dynamic text',
+                          border: OutlineInputBorder(),
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 15),
                   ElevatedButton(
                     onPressed: _showTextStyleDialog,
                     child: const Text('Choose Style'),
@@ -241,19 +244,25 @@ class _SpriteInfoWidgetState extends State<SpriteInfoWidget> {
               key: const ValueKey('imageRow'),
               child: Row(
                 children: [
-                  const Text('Image:'),
+                  const SizedBox(
+                    width: 45,
+                    child: Text('Image:'),
+                  ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: TextField(
-                      controller: _imageUrlController,
-                      onChanged: (text) {
-                        setState(() {
-                          widget.spriteInfo.imagePath = text;
-                        });
-                      },
-                      decoration: const InputDecoration(
-                        hintText: 'input image url here',
-                        border: OutlineInputBorder(),
+                    child: SizedBox(
+                      height: 42.0, // 设置您需要的固定高度
+                      child: TextField(
+                        controller: _imageUrlController,
+                        onChanged: (text) {
+                          setState(() {
+                            widget.spriteInfo.imagePath = text;
+                          });
+                        },
+                        decoration: const InputDecoration(
+                          hintText: 'input image url here',
+                          border: OutlineInputBorder(),
+                        ),
                       ),
                     ),
                   ),

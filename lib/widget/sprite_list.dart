@@ -39,7 +39,7 @@ class _SpriteInfoListState extends State<SpriteInfoList> {
           },
           child: Container(
             margin: const EdgeInsets.all(8.0),
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.circular(8.0),

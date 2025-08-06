@@ -47,9 +47,9 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
   void didChangeDependencies() {
     super.didChangeDependencies();
     containerWidth = math.min(
-        animationController?.width ?? 350, MediaQuery.of(context).size.width);
+        animationController?.width.roundToDouble() ?? 350, MediaQuery.of(context).size.width.roundToDouble());
     containerHeight = math.min(
-        animationController?.height ?? 350, MediaQuery.of(context).size.height);
+        animationController?.height.roundToDouble() ?? 350, MediaQuery.of(context).size.height.roundToDouble());
   }
 
   @override
@@ -69,10 +69,10 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
       setState(() {
         isLoading = false;
         animationController?.videoItem = videoItem;
-        containerWidth = math.min(animationController?.width ?? 350,
-            MediaQuery.of(context).size.width);
-        containerHeight = math.min(animationController?.height ?? 350,
-            MediaQuery.of(context).size.height);
+        containerWidth = math.min(animationController?.width.roundToDouble() ?? 350,
+            MediaQuery.of(context).size.width.roundToDouble());
+        containerHeight = math.min(animationController?.height.roundToDouble() ?? 350,
+            MediaQuery.of(context).size.height.roundToDouble());
         _playAnimation();
       });
     }
@@ -110,11 +110,11 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
               ),
             ),
           ),
-          Positioned(bottom: 10, child: _buildOptions(context)),
+          Positioned(bottom: 0, child: _buildOptions(context)),
           Positioned(
             right: 0,
-            top: 10,
-            bottom: 100,
+            top: 50,
+            bottom: 150,
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
@@ -144,7 +144,7 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
                       width: 20,
                       height: 60,
                       decoration: const BoxDecoration(
-                        color: Colors.black,
+                        color: Colors.black38,
                         borderRadius: BorderRadius.horizontal(
                           left: Radius.circular(8),
                         ),
@@ -191,7 +191,7 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
       width: 500,
       padding: const EdgeInsets.all(8),
       decoration: const BoxDecoration(
-        color: Colors.black,
+        color: Colors.black38,
         borderRadius: BorderRadius.horizontal(
           left: Radius.circular(8),
         ),
@@ -245,7 +245,12 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
   Widget _buildOptions(BuildContext context) {
     return Container(
       width: 240,
-      color: Colors.black12,
+      decoration: const BoxDecoration(
+        color: Colors.black38,
+        borderRadius: BorderRadius.horizontal(
+          right: Radius.circular(8),
+        ),
+      ),
       padding: const EdgeInsets.all(8.0),
       child: SliderTheme(
         data: SliderTheme.of(context).copyWith(
