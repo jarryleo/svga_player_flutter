@@ -1,19 +1,24 @@
 import 'dart:developer';
 import 'dart:io';
 import 'dart:ui' as ui;
+
+import 'package:archive/archive.dart' as archive;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart' show decodeImageFromList;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' show get;
-import 'package:archive/archive.dart' as archive;
+import 'package:svga_player_flutter/widget/sprite_info.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'proto/svga.pbserver.dart';
+import 'utils.dart';
 
 const _filterKey = 'SVGAParser';
 
 /// You use SVGAParser to load and decode animation files.
 class SVGAParser {
   const SVGAParser();
+
   static const shared = SVGAParser();
 
   /// Download animation file from remote server, and decode it.
@@ -85,6 +90,12 @@ class SVGAParser {
           timeline: timeline);
       if (decodeImage != null) {
         movieItem.bitmapCache[item.key] = decodeImage;
+        movieItem.spriteInfoMap[item.key] = SpriteInfo(
+            name: item.key,
+            width: decodeImage.width,
+            height: decodeImage.height,
+            memory: estimateImageMemory(decodeImage)
+        );
       }
     })).then((_) => movieItem);
   }

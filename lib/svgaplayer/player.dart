@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_drawing/path_drawing.dart';
 import 'package:svga_player_flutter/svgaplayer/utils.dart';
+import 'package:svga_player_flutter/widget/sprite_info.dart';
 
 import 'parser.dart';
 import 'proto/svga.pbserver.dart';
@@ -157,6 +158,13 @@ class SVGAAnimationController extends AnimationController {
     final videoItem = _videoItem;
     if (videoItem == null) return [];
     return videoItem.bitmapCache.keys.toList();
+  }
+
+  //获取精灵信息
+  List<SpriteInfo> get spritesInfo {
+    final videoItem = _videoItem;
+    if (videoItem == null) return [];
+    return videoItem.spriteInfoMap.values.toList();
   }
 
   /// mark [_SVGAPainter] needs clear

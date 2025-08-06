@@ -9,6 +9,7 @@ import 'dart:core' as $core;
 import 'dart:core' show int, bool, double, String, List, Map, override;
 import 'dart:ui' as ui show Image, Path;
 import 'package:protobuf/protobuf.dart' as $pb;
+import 'package:svga_player_flutter/widget/sprite_info.dart';
 
 import 'svga.pbenum.dart';
 
@@ -1769,6 +1770,7 @@ class MovieEntity extends $pb.GeneratedMessage {
   SVGADynamicEntity dynamicItem = SVGADynamicEntity();
   Map<String, ui.Image> bitmapCache = {};
   Map<String, ui.Path> pathCache = {};
+  Map<String, SpriteInfo> spriteInfoMap = {};
 
   void dispose() {
     bitmapCache.values.forEach((element) {

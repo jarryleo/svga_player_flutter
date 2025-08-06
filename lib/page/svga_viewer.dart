@@ -7,6 +7,8 @@ import 'package:svga_player_flutter/svgaplayer/proto/svga.pb.dart';
 import 'package:svga_player_flutter/svgaplayer/svga_source.dart';
 import 'package:svga_player_flutter/svgaplayer/utils.dart';
 
+import '../widget/sprite_list.dart';
+
 class SVGAViewerPage extends StatefulWidget {
   final SVGASource source;
 
@@ -67,10 +69,10 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
       setState(() {
         isLoading = false;
         animationController?.videoItem = videoItem;
-        containerWidth = math.min(
-            animationController?.width ?? 350, MediaQuery.of(context).size.width);
-        containerHeight = math.min(
-            animationController?.height ?? 350, MediaQuery.of(context).size.height);
+        containerWidth = math.min(animationController?.width ?? 350,
+            MediaQuery.of(context).size.width);
+        containerHeight = math.min(animationController?.height ?? 350,
+            MediaQuery.of(context).size.height);
         _playAnimation();
       });
     }
@@ -109,6 +111,57 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
             ),
           ),
           Positioned(bottom: 10, child: _buildOptions(context)),
+          Positioned(
+            right: 0,
+            top: 10,
+            bottom: 100,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              width: _isSpriteListVisible ? 520 : 20,
+              // 500 for list + 20 for button
+              onEnd: () {
+                // 动画结束时更新 shouldShowSpriteList 的值
+                if (mounted) {
+                  setState(() {
+                    _shouldShowSpriteList = _isSpriteListVisible;
+                  });
+                }
+              },
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _isSpriteListVisible = !_isSpriteListVisible;
+                        // 当隐藏列表时立即设置为 false
+                        if (!_isSpriteListVisible) {
+                          _shouldShowSpriteList = false;
+                        }
+                      });
+                    },
+                    child: Container(
+                      width: 20,
+                      height: 60,
+                      decoration: const BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.horizontal(
+                          left: Radius.circular(8),
+                        ),
+                      ),
+                      child: Icon(
+                        _isSpriteListVisible
+                            ? Icons.arrow_right
+                            : Icons.arrow_left,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                  if (_shouldShowSpriteList) _buildSpriteInfoList(context),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
       floatingActionButton: isLoading || animationController!.videoItem == null
@@ -126,6 +179,66 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
                 }
                 setState(() {});
               }),
+    );
+  }
+
+  bool _isSpriteListVisible = false;
+  bool _shouldShowSpriteList = false;
+
+  Widget _buildSpriteInfoList(BuildContext context) {
+    var list = animationController!.spritesInfo;
+    return Container(
+      width: 500,
+      padding: const EdgeInsets.all(8),
+      decoration: const BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.horizontal(
+          left: Radius.circular(8),
+        ),
+      ),
+      child: SpriteInfoList(
+        spriteInfos: list,
+        onHighlightChanged: (highlight, spriteInfo) {
+          //todo 高亮
+        },
+        onClearPressed: (spriteInfo) {
+          var videoItem = animationController?.videoItem;
+          var dynamicEntity = videoItem?.dynamicItem;
+          if (dynamicEntity == null) {
+            return;
+          }
+          dynamicEntity.dynamicImages.remove(spriteInfo.name);
+          dynamicEntity.dynamicText.remove(spriteInfo.name);
+        },
+        onApplyPressed: (spriteInfo) {
+          var dynamicItem = animationController?.videoItem?.dynamicItem;
+          if (dynamicItem == null) {
+            return;
+          }
+          var key = spriteInfo.name;
+          //设置占位图
+          var imageUrl = spriteInfo.imagePath ?? "";
+          if (imageUrl.isNotEmpty) {
+            dynamicItem.setImageWithUrl(imageUrl, key);
+          }
+          //设置文本
+          var string = spriteInfo.text ?? "";
+          var fontSize = spriteInfo.textSize ?? 14;
+          var textColor = spriteInfo.textColor ?? Colors.white;
+          if (string.isNotEmpty) {
+            dynamicItem.setText(
+                TextPainter(
+                    text: TextSpan(
+                        text: string,
+                        style: TextStyle(
+                          fontSize: fontSize,
+                          color: textColor,
+                          fontWeight: FontWeight.bold,
+                        ))),
+                key);
+          }
+        },
+      ),
     );
   }
 
