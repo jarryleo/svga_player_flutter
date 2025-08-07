@@ -1,6 +1,8 @@
 import 'dart:ui' as ui show Image;
-import 'package:http/http.dart';
+
 import 'package:flutter/painting.dart';
+import 'package:http/http.dart';
+import 'package:svga_player_flutter/svgaplayer/transformation/ImageTransformation.dart';
 
 typedef SVGACustomDrawer = Function(Canvas canvas, int frameIndex);
 
@@ -18,9 +20,14 @@ class SVGADynamicEntity {
     dynamicImages[forKey] = image;
   }
 
-  Future<void> setImageWithUrl(String url, String forKey) async {
-    dynamicImages[forKey] =
+  Future<void> setImageWithUrl(String url, String forKey,
+      {ImageTransformation? transformation}) async {
+    var image =
         await decodeImageFromList((await get(Uri.parse(url))).bodyBytes);
+    if (transformation != null) {
+      image = await transformation.transform(image);
+    }
+    dynamicImages[forKey] = image;
   }
 
   void setText(TextPainter textPainter, String forKey) {

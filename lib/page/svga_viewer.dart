@@ -231,7 +231,8 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
           //设置占位图
           var imageUrl = spriteInfo.imagePath ?? "";
           if (imageUrl.isNotEmpty) {
-            dynamicItem.setImageWithUrl(imageUrl, key);
+            var tans = spriteInfo.imageTransformation;
+            dynamicItem.setImageWithUrl(imageUrl, key, transformation: tans);
           }
           //设置文本
           var string = spriteInfo.text ?? "";
@@ -352,7 +353,7 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Show Border'),
+                  const Text('Show border'),
                   const SizedBox(width: 8),
                   Switch(
                     value: showBorder,

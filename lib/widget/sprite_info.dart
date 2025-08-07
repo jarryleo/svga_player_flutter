@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:svga_player_flutter/svgaplayer/transformation/ImageTransformation.dart';
 import 'package:svga_player_flutter/utils/snack_bar.dart';
 
+import '../svgaplayer/transformation/CircleImageTransformation.dart';
 import '../svgaplayer/utils.dart';
 
 class SpriteInfo {
@@ -13,6 +15,7 @@ class SpriteInfo {
   Color? textColor;
   double? textSize;
   String? imagePath;
+  ImageTransformation? imageTransformation;
 
   SpriteInfo({
     required this.name,
@@ -23,6 +26,7 @@ class SpriteInfo {
     this.textColor,
     this.textSize,
     this.imagePath,
+    this.imageTransformation,
   });
 }
 
@@ -53,6 +57,11 @@ class _SpriteInfoWidgetState extends State<SpriteInfoWidget> {
 
   // 图片相关控制器和变量
   final TextEditingController _imageUrlController = TextEditingController();
+  //图片裁剪 'Original', 'Circle'
+  final Map<String, ImageTransformation?> imageTransformations = {
+    "Original": null,
+    "Circle": CircleImageTransformation(),
+  };
   String _selectedShape = 'Original';
 
   // 新增高亮状态变量
@@ -273,7 +282,7 @@ class _SpriteInfoWidgetState extends State<SpriteInfoWidget> {
                   const SizedBox(width: 10),
                   DropdownButton<String>(
                     value: _selectedShape,
-                    items: <String>['Original', 'Circle']
+                    items: imageTransformations.keys
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -284,6 +293,7 @@ class _SpriteInfoWidgetState extends State<SpriteInfoWidget> {
                       if (newValue != null) {
                         setState(() {
                           _selectedShape = newValue;
+                          widget.spriteInfo.imageTransformation = imageTransformations[newValue];
                         });
                       }
                     },
