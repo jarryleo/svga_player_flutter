@@ -392,7 +392,7 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
                 children: [
                   const Text(' width:'),
                   Slider(
-                    min: 100,
+                    min: 1,
                     max: MediaQuery.of(context).size.width.roundToDouble(),
                     value: containerWidth,
                     label: '$containerWidth',
@@ -409,7 +409,7 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
                 children: [
                   const Text(' height:'),
                   Slider(
-                    min: 100,
+                    min: 1,
                     max: MediaQuery.of(context).size.height.roundToDouble(),
                     label: '$containerHeight',
                     value: containerHeight,

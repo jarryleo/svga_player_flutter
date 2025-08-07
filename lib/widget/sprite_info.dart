@@ -241,7 +241,7 @@ class _SpriteInfoWidgetState extends State<SpriteInfoWidget> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 15),
+                  const SizedBox(width: 14),
                   ElevatedButton(
                     onPressed: _showTextStyleDialog,
                     child: const Text('Choose Style'),
