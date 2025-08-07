@@ -12,6 +12,7 @@ class SpriteInfo {
   int? height;
   int? memory;
   String? text;
+  bool? isHighlight;
   Color? textColor;
   double? textSize;
   String? imagePath;
@@ -23,6 +24,7 @@ class SpriteInfo {
     this.height,
     this.memory,
     this.text,
+    this.isHighlight,
     this.textColor,
     this.textSize,
     this.imagePath,
@@ -57,6 +59,7 @@ class _SpriteInfoWidgetState extends State<SpriteInfoWidget> {
 
   // 图片相关控制器和变量
   final TextEditingController _imageUrlController = TextEditingController();
+
   //图片裁剪 'Original', 'Circle'
   final Map<String, ImageTransformation?> imageTransformations = {
     "Original": null,
@@ -87,6 +90,7 @@ class _SpriteInfoWidgetState extends State<SpriteInfoWidget> {
     // 初始化控制器值
     _textController.text = widget.spriteInfo.text ?? '';
     _imageUrlController.text = widget.spriteInfo.imagePath ?? '';
+    _isHighlighted = widget.spriteInfo.isHighlight ?? false;
   }
 
   @override
@@ -293,7 +297,8 @@ class _SpriteInfoWidgetState extends State<SpriteInfoWidget> {
                       if (newValue != null) {
                         setState(() {
                           _selectedShape = newValue;
-                          widget.spriteInfo.imageTransformation = imageTransformations[newValue];
+                          widget.spriteInfo.imageTransformation =
+                              imageTransformations[newValue];
                         });
                       }
                     },
@@ -321,6 +326,7 @@ class _SpriteInfoWidgetState extends State<SpriteInfoWidget> {
                         onChanged: (bool? value) {
                           setState(() {
                             _isHighlighted = value ?? false;
+                            widget.spriteInfo.isHighlight = _isHighlighted;
                           });
                           // 反馈到控件外部
                           widget.onHighlightChanged?.call(_isHighlighted);
@@ -348,6 +354,7 @@ class _SpriteInfoWidgetState extends State<SpriteInfoWidget> {
                       setState(() {
                         _textController.clear();
                         _imageUrlController.clear();
+                        _isHighlighted = false;
                         widget.spriteInfo.text = null;
                         widget.spriteInfo.imagePath = null;
                       });

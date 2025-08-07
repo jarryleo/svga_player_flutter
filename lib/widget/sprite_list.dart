@@ -3,7 +3,7 @@ import 'sprite_info.dart';
 
 class SpriteInfoList extends StatefulWidget {
   final List<SpriteInfo> spriteInfos;
-  final Function(bool,SpriteInfo spriteInfo)? onHighlightChanged;
+  final Function(bool, SpriteInfo spriteInfo)? onHighlightChanged;
   final Function(SpriteInfo spriteInfo)? onClearPressed;
   final Function(SpriteInfo spriteInfo)? onApplyPressed;
 
@@ -19,48 +19,105 @@ class SpriteInfoList extends StatefulWidget {
   _SpriteInfoListState createState() => _SpriteInfoListState();
 }
 
-
 class _SpriteInfoListState extends State<SpriteInfoList> {
-  int _expandedIndex = -1; // 当前展开的条目索引，-1表示没有展开的条目
+  int _expandedIndex = -1;
+  final TextEditingController _searchController = TextEditingController();
+  List<SpriteInfo> _filteredSpriteInfos = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredSpriteInfos = widget.spriteInfos;
+    _searchController.addListener(_filterSprites);
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_filterSprites);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterSprites() {
+    final query = _searchController.text.toLowerCase();
+    if (query.isEmpty) {
+      setState(() {
+        _filteredSpriteInfos = widget.spriteInfos;
+      });
+    } else {
+      setState(() {
+        _filteredSpriteInfos = widget.spriteInfos
+            .where((sprite) => sprite.name.toLowerCase().contains(query))
+            .toList();
+      });
+    }
+
+    // 如果当前展开的项不再显示在结果中，则重置展开索引
+    if (_expandedIndex != -1 &&
+        _filteredSpriteInfos.length <= _expandedIndex ||
+        (_filteredSpriteInfos.isNotEmpty &&
+            _expandedIndex < widget.spriteInfos.length &&
+            !_filteredSpriteInfos.contains(widget.spriteInfos[_expandedIndex]))) {
+      _expandedIndex = -1;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: widget.spriteInfos.length,
-      itemBuilder: (context, index) {
-        final spriteInfo = widget.spriteInfos[index];
-        return GestureDetector(
-          onTap: () {
-            setState(() {
-              // 如果点击的是已展开的条目，则收起它；否则展开新条目并收起其他条目
-              _expandedIndex = _expandedIndex == index ? -1 : index;
-            });
-          },
-          child: Container(
-            margin: const EdgeInsets.all(8.0),
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: SpriteInfoWidget(
-              key: ValueKey(spriteInfo.name), // 为每个widget提供唯一key
-              spriteInfo: spriteInfo,
-              isExpanded: _expandedIndex == index,
-              onHighlightChanged: (highlight) {
-                widget.onHighlightChanged?.call( highlight, spriteInfo);
-              },
-              onClearPressed: () {
-                widget.onClearPressed?.call(spriteInfo);
-              },
-              onApplyPressed: () {
-                widget.onApplyPressed?.call(spriteInfo);
-              },
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            controller: _searchController,
+            decoration: const InputDecoration(
+              hintText: 'Search for key',
+              prefixIcon: Icon(Icons.search),
+              border: OutlineInputBorder(),
             ),
           ),
-        );
-      },
+        ),
+        Expanded(
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: _filteredSpriteInfos.length,
+            itemBuilder: (context, index) {
+              final spriteInfo = _filteredSpriteInfos[index];
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    // 需要找到在原始列表中的索引
+                    final originalIndex = widget.spriteInfos.indexOf(spriteInfo);
+                    _expandedIndex = _expandedIndex == originalIndex ? -1 : originalIndex;
+                  });
+                },
+                child: Container(
+                  margin: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: SpriteInfoWidget(
+                    key: ValueKey(spriteInfo.name),
+                    spriteInfo: spriteInfo,
+                    isExpanded: widget.spriteInfos.indexOf(spriteInfo) == _expandedIndex,
+                    onHighlightChanged: (highlight) {
+                      widget.onHighlightChanged?.call(highlight, spriteInfo);
+                    },
+                    onClearPressed: () {
+                      widget.onClearPressed?.call(spriteInfo);
+                    },
+                    onApplyPressed: () {
+                      widget.onApplyPressed?.call(spriteInfo);
+                    },
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

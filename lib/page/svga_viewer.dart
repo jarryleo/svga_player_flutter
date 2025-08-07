@@ -221,6 +221,7 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
           }
           dynamicEntity.dynamicImages.remove(spriteInfo.name);
           dynamicEntity.dynamicText.remove(spriteInfo.name);
+          videoItem?.highlights.clear();
         },
         onApplyPressed: (spriteInfo) {
           var dynamicItem = animationController?.videoItem?.dynamicItem;
