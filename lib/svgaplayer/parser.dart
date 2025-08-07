@@ -50,6 +50,7 @@ class SVGAParser {
           arguments: {'inflatedLength': inflatedBytes.length});
     }
     final movie = MovieEntity.fromBuffer(inflatedBytes);
+    movie.fileSize = bytes.length;
     if (timeline != null) {
       timeline.instant('prepareResources()',
           arguments: {'images': movie.images.keys.join(',')});

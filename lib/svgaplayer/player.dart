@@ -139,6 +139,12 @@ class SVGAAnimationController extends AnimationController {
     return videoItem.params.fps;
   }
 
+  int get fileSize {
+    final videoItem = _videoItem;
+    if (videoItem == null) return 0;
+    return videoItem.fileSize;
+  }
+
   //get memory
   int get memory {
     final videoItem = _videoItem;

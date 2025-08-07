@@ -303,6 +303,14 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
               AnimatedBuilder(
                   animation: animationController!,
                   builder: (context, child) {
+                    int size = animationController!.fileSize;
+                    String format = formatFileSize(size);
+                    return Text('FileSize: $format ($size)');
+                  }),
+              const SizedBox(height: 8),
+              AnimatedBuilder(
+                  animation: animationController!,
+                  builder: (context, child) {
                     int size = animationController!.memory;
                     String format = formatFileSize(size);
                     return Text('Memory: $format ($size)');
