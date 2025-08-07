@@ -12,6 +12,8 @@ class _SVGAPainter extends CustomPainter {
   /// Guaranteed to draw within the canvas bounds
   final bool clipRect;
   final bool showBorder;
+  final bitmapPaint = Paint();
+  final highlightPaint = Paint();
 
   _SVGAPainter(
     this.controller, {
@@ -21,7 +23,16 @@ class _SVGAPainter extends CustomPainter {
     this.showBorder = false,
   })  : assert(
             controller.videoItem != null, 'Invalid SVGAAnimationController!'),
-        super(repaint: controller);
+        super(repaint: controller) {
+    bitmapPaint.filterQuality = filterQuality;
+    //解决bitmap锯齿问题
+    bitmapPaint.isAntiAlias = true;
+    bitmapPaint.color = const Color.fromARGB(1, 0, 0, 0);
+    //高亮画笔
+    highlightPaint.filterQuality = filterQuality;
+    highlightPaint.isAntiAlias = true;
+    highlightPaint.color = const Color.fromARGB(128, 255, 0, 0);
+  }
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -39,7 +50,7 @@ class _SVGAPainter extends CustomPainter {
       final canvasRect = Offset.zero & size;
       if (clipRect) canvas.clipRect(canvasRect);
       //绘制边框
-      if(showBorder) {
+      if (showBorder) {
         canvas.drawRect(
             canvasRect,
             Paint()
@@ -119,6 +130,10 @@ class _SVGAPainter extends CustomPainter {
       if (dynamicDrawer != null) {
         dynamicDrawer(canvas, currentFrame);
       }
+      //高亮
+      if(videoItem.highlights.contains(imageKey)){
+        canvas.drawRect(frameRect, highlightPaint);
+      }
       if (needClip) {
         canvas.restore();
       }
@@ -133,10 +148,6 @@ class _SVGAPainter extends CustomPainter {
         videoItem.bitmapCache[imageKey];
     if (bitmap == null) return;
 
-    final bitmapPaint = Paint();
-    bitmapPaint.filterQuality = filterQuality;
-    //解决bitmap锯齿问题
-    bitmapPaint.isAntiAlias = true;
     bitmapPaint.color = Color.fromARGB(alpha, 0, 0, 0);
 
     Rect srcRect =

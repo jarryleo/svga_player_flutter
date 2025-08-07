@@ -1771,6 +1771,7 @@ class MovieEntity extends $pb.GeneratedMessage {
   Map<String, ui.Image> bitmapCache = {};
   Map<String, ui.Path> pathCache = {};
   Map<String, SpriteInfo> spriteInfoMap = {};
+  List<String> highlights = [];
   int fileSize = 0;
 
   void dispose() {

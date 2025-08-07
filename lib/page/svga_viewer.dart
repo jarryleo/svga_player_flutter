@@ -46,10 +46,11 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    containerWidth = math.min(
-        animationController?.width.roundToDouble() ?? 350, MediaQuery.of(context).size.width.roundToDouble());
+    containerWidth = math.min(animationController?.width.roundToDouble() ?? 350,
+        MediaQuery.of(context).size.width.roundToDouble());
     containerHeight = math.min(
-        animationController?.height.roundToDouble() ?? 350, MediaQuery.of(context).size.height.roundToDouble());
+        animationController?.height.roundToDouble() ?? 350,
+        MediaQuery.of(context).size.height.roundToDouble());
   }
 
   @override
@@ -69,9 +70,11 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
       setState(() {
         isLoading = false;
         animationController?.videoItem = videoItem;
-        containerWidth = math.min(animationController?.width.roundToDouble() ?? 350,
+        containerWidth = math.min(
+            animationController?.width.roundToDouble() ?? 350,
             MediaQuery.of(context).size.width.roundToDouble());
-        containerHeight = math.min(animationController?.height.roundToDouble() ?? 350,
+        containerHeight = math.min(
+            animationController?.height.roundToDouble() ?? 350,
             MediaQuery.of(context).size.height.roundToDouble());
         _playAnimation();
       });
@@ -199,7 +202,16 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
       child: SpriteInfoList(
         spriteInfos: list,
         onHighlightChanged: (highlight, spriteInfo) {
-          //todo 高亮
+          //高亮
+          var videoItem = animationController?.videoItem;
+          if (videoItem == null) {
+            return;
+          }
+          if (highlight) {
+            videoItem.highlights.add(spriteInfo.name);
+          } else {
+            videoItem.highlights.remove(spriteInfo.name);
+          }
         },
         onClearPressed: (spriteInfo) {
           var videoItem = animationController?.videoItem;
