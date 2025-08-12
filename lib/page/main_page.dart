@@ -29,7 +29,7 @@ class _MainPageState extends State<MainPage> {
       appBar: AppBar(title: const Text('SVGA Viewer by Jarry Leo')),
       body: DragFile(
         content: widget._list.isEmpty
-            ? const Center(child: Text('Svga File drop here ~'))
+            ? const Center(child: Text('SVGA File drop here ~'))
             : ListView.separated(
                 itemCount: widget._list.length,
                 separatorBuilder: (_, __) => const Divider(),
