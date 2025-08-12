@@ -8,6 +8,7 @@ import 'package:svga_viewer/svgaplayer/svga_source.dart';
 import 'package:svga_viewer/svgaplayer/utils.dart';
 
 import '../widget/sprite_list.dart';
+import '../widget/svga_control_bar.dart';
 
 class SVGAViewerPage extends StatefulWidget {
   final SVGASource source;
@@ -113,7 +114,15 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
               ),
             ),
           ),
-          Positioned(bottom: 0, child: _buildOptions(context)),
+          Positioned(bottom: 100, child: _buildOptions(context)),
+          Positioned(
+            bottom: 10,
+            left: 10,
+            right: 10,
+            child: SvgaControlBar(
+              animationController: animationController!,
+            ),
+          ),
           Positioned(
             right: 0,
             top: 50,
@@ -167,21 +176,6 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
           ),
         ],
       ),
-      floatingActionButton: isLoading || animationController!.videoItem == null
-          ? null
-          : FloatingActionButton.extended(
-              label: Text(animationController!.isAnimating ? "Pause" : "Play"),
-              icon: Icon(animationController!.isAnimating
-                  ? Icons.pause
-                  : Icons.play_arrow),
-              onPressed: () {
-                if (animationController?.isAnimating == true) {
-                  animationController?.stop();
-                } else {
-                  _playAnimation();
-                }
-                setState(() {});
-              }),
     );
   }
 
