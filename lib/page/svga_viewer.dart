@@ -2,10 +2,10 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:svga_player_flutter/svgaplayer/player.dart';
-import 'package:svga_player_flutter/svgaplayer/proto/svga.pb.dart';
-import 'package:svga_player_flutter/svgaplayer/svga_source.dart';
-import 'package:svga_player_flutter/svgaplayer/utils.dart';
+import 'package:svga_viewer/svgaplayer/player.dart';
+import 'package:svga_viewer/svgaplayer/proto/svga.pb.dart';
+import 'package:svga_viewer/svgaplayer/svga_source.dart';
+import 'package:svga_viewer/svgaplayer/utils.dart';
 
 import '../widget/sprite_list.dart';
 

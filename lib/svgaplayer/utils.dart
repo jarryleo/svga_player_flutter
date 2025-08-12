@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:ui' as ui show Image;
-import 'package:svga_player_flutter/svgaplayer/svgaplayer_flutter.dart';
+import 'package:svga_viewer/svgaplayer/svgaplayer_flutter.dart';
 import 'svga_source.dart';
 
 int estimateImageMemory(ui.Image image) {

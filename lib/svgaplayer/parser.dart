@@ -7,10 +7,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart' show decodeImageFromList;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' show get;
-import 'package:svga_player_flutter/widget/sprite_info.dart';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'proto/svga.pbserver.dart';
+import 'sprite_info.dart';
 import 'utils.dart';
 
 const _filterKey = 'SVGAParser';
@@ -95,8 +95,7 @@ class SVGAParser {
             name: item.key,
             width: decodeImage.width,
             height: decodeImage.height,
-            memory: estimateImageMemory(decodeImage)
-        );
+            memory: estimateImageMemory(decodeImage));
       }
     })).then((_) => movieItem);
   }

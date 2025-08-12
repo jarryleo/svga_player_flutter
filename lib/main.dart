@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:svga_player_flutter/page/main_page.dart';
-import 'package:svga_player_flutter/utils/platform_utils.dart';
+import 'package:svga_viewer/page/main_page.dart';
+import 'package:svga_viewer/utils/platform_utils.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
@@ -21,11 +21,11 @@ void main() async {
     });
   }
 
-  runApp(const ExampleApp());
+  runApp(const MainApp());
 }
 
-class ExampleApp extends StatelessWidget {
-  const ExampleApp({super.key});
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -6,11 +6,11 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_drawing/path_drawing.dart';
-import 'package:svga_player_flutter/svgaplayer/utils.dart';
-import 'package:svga_player_flutter/widget/sprite_info.dart';
+import 'package:svga_viewer/svgaplayer/utils.dart';
 
 import 'parser.dart';
 import 'proto/svga.pbserver.dart';
+import 'sprite_info.dart';
 
 part 'painter.dart';
 part 'simple_player.dart';

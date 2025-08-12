@@ -1,4 +1,4 @@
-package cn.leo.svga.player.svga_player_flutter
+package cn.leo.svga.player.svga_viewer
 
 import io.flutter.embedding.android.FlutterActivity
 

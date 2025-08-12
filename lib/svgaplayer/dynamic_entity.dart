@@ -2,7 +2,7 @@ import 'dart:ui' as ui show Image;
 
 import 'package:flutter/painting.dart';
 import 'package:http/http.dart';
-import 'package:svga_player_flutter/svgaplayer/transformation/ImageTransformation.dart';
+import 'package:svga_viewer/svgaplayer/transformation/ImageTransformation.dart';
 
 typedef SVGACustomDrawer = Function(Canvas canvas, int frameIndex);
 

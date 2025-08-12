@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:svga_player_flutter/svgaplayer/svga_source.dart';
-import 'package:svga_player_flutter/widget/drag_file.dart';
+import 'package:svga_viewer/svgaplayer/svga_source.dart';
+import 'package:svga_viewer/widget/drag_file.dart';
 
 import 'svga_viewer.dart';
 

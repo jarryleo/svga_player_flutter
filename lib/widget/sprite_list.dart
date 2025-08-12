@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'sprite_info.dart';
+import 'package:svga_viewer/svgaplayer/sprite_info.dart';
+
+import 'sprite_item.dart';
 
 class SpriteInfoList extends StatefulWidget {
   final List<SpriteInfo> spriteInfos;
@@ -53,11 +55,11 @@ class _SpriteInfoListState extends State<SpriteInfoList> {
     }
 
     // 如果当前展开的项不再显示在结果中，则重置展开索引
-    if (_expandedIndex != -1 &&
-        _filteredSpriteInfos.length <= _expandedIndex ||
+    if (_expandedIndex != -1 && _filteredSpriteInfos.length <= _expandedIndex ||
         (_filteredSpriteInfos.isNotEmpty &&
             _expandedIndex < widget.spriteInfos.length &&
-            !_filteredSpriteInfos.contains(widget.spriteInfos[_expandedIndex]))) {
+            !_filteredSpriteInfos
+                .contains(widget.spriteInfos[_expandedIndex]))) {
       _expandedIndex = -1;
     }
   }
@@ -87,8 +89,10 @@ class _SpriteInfoListState extends State<SpriteInfoList> {
                 onTap: () {
                   setState(() {
                     // 需要找到在原始列表中的索引
-                    final originalIndex = widget.spriteInfos.indexOf(spriteInfo);
-                    _expandedIndex = _expandedIndex == originalIndex ? -1 : originalIndex;
+                    final originalIndex =
+                        widget.spriteInfos.indexOf(spriteInfo);
+                    _expandedIndex =
+                        _expandedIndex == originalIndex ? -1 : originalIndex;
                   });
                 },
                 child: Container(
@@ -98,10 +102,11 @@ class _SpriteInfoListState extends State<SpriteInfoList> {
                     border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(8.0),
                   ),
-                  child: SpriteInfoWidget(
+                  child: SpriteInfoItemWidget(
                     key: ValueKey(spriteInfo.name),
                     spriteInfo: spriteInfo,
-                    isExpanded: widget.spriteInfos.indexOf(spriteInfo) == _expandedIndex,
+                    isExpanded: widget.spriteInfos.indexOf(spriteInfo) ==
+                        _expandedIndex,
                     onHighlightChanged: (highlight) {
                       widget.onHighlightChanged?.call(highlight, spriteInfo);
                     },

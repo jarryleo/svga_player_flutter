@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "cn.leo.svga.player" "\0"
-            VALUE "FileDescription", "svga_player_flutter" "\0"
+            VALUE "FileDescription", "svga_viewer" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "svga_player_flutter" "\0"
+            VALUE "InternalName", "svga_viewer" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2025 cn.leo.svga.player. All rights reserved." "\0"
-            VALUE "OriginalFilename", "svga_player_flutter.exe" "\0"
-            VALUE "ProductName", "svga_player_flutter" "\0"
+            VALUE "OriginalFilename", "svga_viewer.exe" "\0"
+            VALUE "ProductName", "svga_viewer" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

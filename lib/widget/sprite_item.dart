@@ -1,46 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:svga_player_flutter/svgaplayer/transformation/ImageTransformation.dart';
-import 'package:svga_player_flutter/utils/snack_bar.dart';
+import 'package:svga_viewer/svgaplayer/sprite_info.dart';
+import 'package:svga_viewer/svgaplayer/transformation/ImageTransformation.dart';
+import 'package:svga_viewer/utils/snack_bar.dart';
 
 import '../svgaplayer/transformation/CircleImageTransformation.dart';
 import '../svgaplayer/utils.dart';
 
-class SpriteInfo {
-  final String name;
-  int? width;
-  int? height;
-  int? memory;
-  String? text;
-  bool? isHighlight;
-  Color? textColor;
-  double? textSize;
-  String? imagePath;
-  ImageTransformation? imageTransformation;
-
-  SpriteInfo({
-    required this.name,
-    this.width,
-    this.height,
-    this.memory,
-    this.text,
-    this.isHighlight,
-    this.textColor,
-    this.textSize,
-    this.imagePath,
-    this.imageTransformation,
-  });
-}
-
 // 修改 SpriteInfoWidget 类，添加新的回调函数参数
-class SpriteInfoWidget extends StatefulWidget {
+class SpriteInfoItemWidget extends StatefulWidget {
   final SpriteInfo spriteInfo;
   final bool isExpanded;
   final Function(bool)? onHighlightChanged;
   final Function()? onClearPressed;
   final Function()? onApplyPressed;
 
-  const SpriteInfoWidget({
+  const SpriteInfoItemWidget({
     super.key,
     required this.spriteInfo,
     this.isExpanded = false,
@@ -50,10 +25,10 @@ class SpriteInfoWidget extends StatefulWidget {
   });
 
   @override
-  _SpriteInfoWidgetState createState() => _SpriteInfoWidgetState();
+  _SpriteInfoItemWidgetState createState() => _SpriteInfoItemWidgetState();
 }
 
-class _SpriteInfoWidgetState extends State<SpriteInfoWidget> {
+class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
   // 文字相关控制器和变量
   final TextEditingController _textController = TextEditingController();
 

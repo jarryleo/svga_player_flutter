@@ -1,6 +1,6 @@
 {
-    "name": "svga_player_flutter",
-    "short_name": "svga_player_flutter",
+    "name": "svga_viewer",
+    "short_name": "svga_viewer",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#000000",

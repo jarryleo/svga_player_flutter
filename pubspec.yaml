@@ -1,4 +1,4 @@
-name: svga_player_flutter
+name: svga_viewer
 description: A new Flutter project for SvgaPlayer.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.

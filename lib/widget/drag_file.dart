@@ -1,6 +1,6 @@
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
-import 'package:svga_player_flutter/page/main_page.dart';
+import 'package:svga_viewer/page/main_page.dart';
 
 class DragFile extends StatefulWidget {
   final Widget? content;

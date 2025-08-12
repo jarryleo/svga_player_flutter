@@ -1,4 +1,4 @@
-# svga_player_flutter
+# svga_viewer
 
 A new Flutter project for SvgaPlayer.
 
