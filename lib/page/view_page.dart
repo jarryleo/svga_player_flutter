@@ -28,7 +28,12 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
   void initState() {
     super.initState();
     animationController = SVGAAnimationController(vsync: this);
-    animationController?.load(widget.source);
+    animationController?.load(widget.source,onSuccess: (e){
+      setState(() {
+        model.changeIsLoading(false);
+        model.setSize(animationController!.width, animationController!.height);
+      });
+    });
   }
 
   @override

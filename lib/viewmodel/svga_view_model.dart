@@ -2,31 +2,42 @@ import '../includes.dart';
 import '../theme/g_colors.dart';
 
 class SvgaViewerModel extends ChangeNotifier {
-  bool _isLoading = false;
+  static const double defaultSize = 350;
+
+  bool _isLoading = true;
+
   bool get isLoading => _isLoading;
 
   bool _allowOverflow = true;
+
   bool get allowOverflow => _allowOverflow;
 
-  double _width = 350;
+  double _width = defaultSize;
+
   double get width => _width;
 
-  double _height = 350;
+  double _height = defaultSize;
+
   double get height => _height;
 
-  double _containerWidth = 350;
+  double _containerWidth = defaultSize;
+
   double get containerWidth => _containerWidth;
 
-  double _containerHeight = 350;
+  double _containerHeight = defaultSize;
+
   double get containerHeight => _containerHeight;
 
   double _scale = 1;
+
   double get scale => _scale;
 
   Color _backgroundColor = GColors.lightBlue;
+
   Color get backgroundColor => _backgroundColor;
 
   BoxFit _boxFit = BoxFit.contain;
+
   BoxFit get boxFit => _boxFit;
 
   void changeBackgroundColor(Color color) {
@@ -47,7 +58,17 @@ class SvgaViewerModel extends ChangeNotifier {
   void setSize(double width, double height) {
     _width = width;
     _height = height;
-    resetSize();
+    var ratio = width / height;
+    if (ratio > 1) {
+      _containerWidth = defaultSize;
+      _containerHeight = defaultSize / ratio;
+      _scale = defaultSize / _width;
+    } else {
+      _containerHeight = defaultSize;
+      _containerWidth = defaultSize * ratio;
+      _scale = defaultSize / _height;
+    }
+    notifyListeners();
   }
 
   void changeContainerSize(double width, double height) {
@@ -61,8 +82,8 @@ class SvgaViewerModel extends ChangeNotifier {
     if (_scale > 2) {
       _scale = 2;
     }
-    _containerHeight = _width * _scale;
-    _containerWidth = _height * _scale;
+    _containerWidth = _width * _scale;
+    _containerHeight = _height * _scale;
     notifyListeners();
   }
 
@@ -71,8 +92,8 @@ class SvgaViewerModel extends ChangeNotifier {
     if (_scale < 0.1) {
       _scale = 0.1;
     }
-    _containerHeight = _width * _scale;
-    _containerWidth = _height * _scale;
+    _containerWidth = _width * _scale;
+    _containerHeight = _height * _scale;
     notifyListeners();
   }
 
