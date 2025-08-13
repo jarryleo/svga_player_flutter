@@ -11,6 +11,7 @@ import 'package:svga_viewer/svgaplayer/utils.dart';
 import 'parser.dart';
 import 'proto/svga.pbserver.dart';
 import 'sprite_info.dart';
+import 'svga_source.dart';
 
 part 'painter.dart';
 part 'simple_player.dart';
@@ -32,8 +33,6 @@ class SVGAImage extends StatefulWidget {
   /// which means allow drawing to overflow canvas bounds.
   final bool? allowDrawingOverflow;
 
-  final bool? showBorder;
-
   /// If `null`, the viewbox size of [MovieEntity] will be use.
   ///
   /// Defaults to null.
@@ -43,9 +42,8 @@ class SVGAImage extends StatefulWidget {
     this._controller, {
     Key? key,
     this.fit = BoxFit.contain,
-    this.filterQuality = FilterQuality.low,
+    this.filterQuality = FilterQuality.high,
     this.allowDrawingOverflow,
-    this.showBorder = false,
     this.clearsAfterStop = true,
     this.preferredSize,
   }) : super(key: key);
@@ -67,6 +65,21 @@ class SVGAAnimationController extends AnimationController {
   SVGAAnimationController({
     required TickerProvider vsync,
   }) : super(vsync: vsync, duration: Duration.zero);
+
+  void load(SVGASource source,
+      {Function(MovieEntity)? onSuccess,
+      Function(Object)? onError,
+      bool autoPlay = true}) {
+    loadVideoItem(source).then((value) {
+      videoItem = value;
+      if (autoPlay) {
+        repeat();
+      }
+      onSuccess?.call(value);
+    }).catchError((err) {
+      onError?.call(err);
+    });
+  }
 
   set videoItem(MovieEntity? value) {
     assert(!_isDisposed, '$this has been disposed!');
@@ -120,32 +133,35 @@ class SVGAAnimationController extends AnimationController {
     return videoItem.params.frames;
   }
 
+  ///get original width
   double get width {
     final videoItem = _videoItem;
     if (videoItem == null) return 350;
     return videoItem.params.viewBoxWidth;
   }
 
+  ///get original height
   double get height {
     final videoItem = _videoItem;
     if (videoItem == null) return 350;
     return videoItem.params.viewBoxHeight;
   }
 
-  //get fps
+  ///get fps
   int get fps {
     final videoItem = _videoItem;
     if (videoItem == null) return 0;
     return videoItem.params.fps;
   }
 
+  ///get file size
   int get fileSize {
     final videoItem = _videoItem;
     if (videoItem == null) return 0;
     return videoItem.fileSize;
   }
 
-  //get memory
+  ///get memory
   int get memory {
     final videoItem = _videoItem;
     if (videoItem == null) return 0;
@@ -159,14 +175,14 @@ class SVGAAnimationController extends AnimationController {
     return size;
   }
 
-  //获取精灵名称列表
+  ///获取精灵名称列表
   List<String> get spriteKeys {
     final videoItem = _videoItem;
     if (videoItem == null) return [];
     return videoItem.bitmapCache.keys.toList();
   }
 
-  //获取精灵信息
+  ///获取精灵信息
   List<SpriteInfo> get spritesInfo {
     final videoItem = _videoItem;
     if (videoItem == null) return [];
@@ -272,7 +288,6 @@ class _SVGAImageState extends State<SVGAImage> {
           filterQuality: widget.filterQuality,
           // default is allowing overflow for backward compatibility
           clipRect: widget.allowDrawingOverflow == false,
-          showBorder: widget.showBorder == true,
         ),
         size: preferredSize,
       ),

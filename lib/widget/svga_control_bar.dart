@@ -1,14 +1,18 @@
 import 'package:svga_viewer/svgaplayer/svgaplayer_flutter.dart';
+import 'package:svga_viewer/theme/g_colors.dart';
 import 'package:svga_viewer/theme/text_styles.dart';
 
 import '../includes.dart';
+import '../viewmodel/svga_view_model.dart';
 
 /// 动画控制条
 class SvgaControlBar extends StatefulWidget {
   /// 动画控制器
   final SVGAAnimationController animationController;
+  final SvgaViewerModel model;
 
-  const SvgaControlBar({super.key, required this.animationController});
+  const SvgaControlBar(
+      {super.key, required this.animationController, required this.model});
 
   @override
   State<SvgaControlBar> createState() => _SvgaControlBarState();
@@ -85,6 +89,82 @@ class _SvgaControlBarState extends State<SvgaControlBar> {
                 );
               }),
           const Spacer(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Overflow:'),
+              const SizedBox(width: 8),
+              Switch(
+                value: widget.model.allowOverflow,
+                onChanged: (v) {
+                  setState(() {
+                    widget.model.changeAllowOverflow(v);
+                  });
+                },
+              )
+            ],
+          ),
+          const SizedBox(width: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Box fit:'),
+              const SizedBox(width: 8),
+              DropdownButton<BoxFit>(
+                value: widget.model.boxFit,
+                onChanged: (BoxFit? newValue) {
+                  setState(() {
+                    widget.model.changeBoxFit(newValue!);
+                  });
+                },
+                items: BoxFit.values.map((BoxFit value) {
+                  return DropdownMenuItem(
+                    value: value,
+                    child: Text(value.toString().split('.').last),
+                  );
+                }).toList(),
+              )
+            ],
+          ),
+          const SizedBox(width: 8),
+          //工作区颜色选择
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: const [
+              GColors.bodyBg,
+              Colors.red,
+              Colors.green,
+              Colors.blue,
+              Colors.yellow,
+              Colors.black,
+            ]
+                .map(
+                  (e) => GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        widget.model.changeBackgroundColor(e);
+                      });
+                    },
+                    child: Container(
+                      width: 20,
+                      height: 20,
+                      decoration: ShapeDecoration(
+                        color: e,
+                        shape: CircleBorder(
+                          side: widget.model.backgroundColor == e
+                              ? const BorderSide(
+                                  color: Colors.grey,
+                                  width: 3,
+                                )
+                              : const BorderSide(color: Colors.grey),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+          const SizedBox(width: 16),
         ]),
       ),
     );

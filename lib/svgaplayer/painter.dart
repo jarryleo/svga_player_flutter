@@ -11,7 +11,6 @@ class _SVGAPainter extends CustomPainter {
 
   /// Guaranteed to draw within the canvas bounds
   final bool clipRect;
-  final bool showBorder;
   final bitmapPaint = Paint();
   final highlightPaint = Paint();
 
@@ -20,7 +19,6 @@ class _SVGAPainter extends CustomPainter {
     this.fit = BoxFit.contain,
     this.filterQuality = FilterQuality.low,
     this.clipRect = true,
-    this.showBorder = false,
   })  : assert(
             controller.videoItem != null, 'Invalid SVGAAnimationController!'),
         super(repaint: controller) {
@@ -49,15 +47,6 @@ class _SVGAPainter extends CustomPainter {
     try {
       final canvasRect = Offset.zero & size;
       if (clipRect) canvas.clipRect(canvasRect);
-      //绘制边框
-      if (showBorder) {
-        canvas.drawRect(
-            canvasRect,
-            Paint()
-              ..style = PaintingStyle.stroke
-              ..color = Colors.white
-              ..strokeWidth = 1.0);
-      }
       scaleCanvasToViewBox(canvas, canvasRect, Offset.zero & viewBoxSize);
       drawSprites(canvas, size);
     } finally {
@@ -131,7 +120,7 @@ class _SVGAPainter extends CustomPainter {
         dynamicDrawer(canvas, currentFrame);
       }
       //高亮
-      if(videoItem.highlights.contains(imageKey)){
+      if (videoItem.highlights.contains(imageKey)) {
         canvas.drawRect(frameRect, highlightPaint);
       }
       if (needClip) {

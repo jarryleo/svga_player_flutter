@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:svga_viewer/svgaplayer/svga_source.dart';
 import 'package:svga_viewer/widget/drag_file.dart';
 
-import 'svga_viewer.dart';
+import 'view_page.dart';
 
 class FileItem {
   final String name;

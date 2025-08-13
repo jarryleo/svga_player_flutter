@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'parser.dart';
+
 /// SVGA 数据源类型枚举
 enum SVGASourceType {
   url,
@@ -40,5 +42,15 @@ class SVGASource {
   @override
   String toString() {
     return 'name: $name, type: ${type.name}, source: $source';
+  }
+}
+
+Future loadVideoItem(SVGASource source) {
+  if (source.type == SVGASourceType.file) {
+    return SVGAParser.shared.decodeFromFile(File(source.source));
+  } else if (source.type == SVGASourceType.asset) {
+    return SVGAParser.shared.decodeFromAssets(source.source);
+  } else {
+    return SVGAParser.shared.decodeFromURL(source.source);
   }
 }

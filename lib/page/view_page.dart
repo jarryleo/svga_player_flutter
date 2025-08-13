@@ -1,14 +1,15 @@
-import 'dart:math' as math;
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:svga_viewer/svgaplayer/player.dart';
 import 'package:svga_viewer/svgaplayer/proto/svga.pb.dart';
 import 'package:svga_viewer/svgaplayer/svga_source.dart';
 import 'package:svga_viewer/svgaplayer/utils.dart';
+import 'package:svga_viewer/theme/g_colors.dart';
+import 'package:svga_viewer/theme/text_styles.dart';
+import 'package:svga_viewer/viewmodel/svga_view_model.dart';
 
 import '../widget/sprite_list.dart';
 import '../widget/svga_control_bar.dart';
+import '../widget/svga_viewer.dart';
 
 class SVGAViewerPage extends StatefulWidget {
   final SVGASource source;
@@ -25,33 +26,14 @@ class SVGAViewerPage extends StatefulWidget {
 class _SVGAViewerPageState extends State<SVGAViewerPage>
     with SingleTickerProviderStateMixin {
   SVGAAnimationController? animationController;
-  bool isLoading = true;
-  Color backgroundColor = Colors.transparent;
-  bool allowOverflow = true;
-  bool showBorder = false;
-
-  // Canvaskit need FilterQuality.high
-  FilterQuality filterQuality = kIsWeb ? FilterQuality.high : FilterQuality.low;
-  BoxFit fit = BoxFit.contain;
-  late double containerWidth;
-  late double containerHeight;
+  SvgaViewerModel model = SvgaViewerModel();
   bool hideOptions = false;
 
   @override
   void initState() {
     super.initState();
     animationController = SVGAAnimationController(vsync: this);
-    _loadAnimation();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    containerWidth = math.min(animationController?.width.roundToDouble() ?? 350,
-        MediaQuery.of(context).size.width.roundToDouble());
-    containerHeight = math.min(
-        animationController?.height.roundToDouble() ?? 350,
-        MediaQuery.of(context).size.height.roundToDouble());
+    animationController?.load(widget.source);
   }
 
   @override
@@ -61,58 +43,21 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
     super.dispose();
   }
 
-  void _loadAnimation() async {
-    // FIXME: may throw error on loading
-    final videoItem = await loadVideoItem(widget.source);
-    if (widget.dynamicCallback != null) {
-      widget.dynamicCallback!(videoItem);
-    }
-    if (mounted) {
-      setState(() {
-        isLoading = false;
-        animationController?.videoItem = videoItem;
-        containerWidth = math.min(
-            animationController?.width.roundToDouble() ?? 350,
-            MediaQuery.of(context).size.width.roundToDouble());
-        containerHeight = math.min(
-            animationController?.height.roundToDouble() ?? 350,
-            MediaQuery.of(context).size.height.roundToDouble());
-        _playAnimation();
-      });
-    }
-  }
-
-  void _playAnimation() {
-    if (animationController?.isCompleted == true) {
-      animationController?.reset();
-    }
-    animationController?.repeat(); // or animationController.forward();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: GColors.bodyBg,
       appBar: AppBar(title: Text(widget.source.name ?? "")),
       body: Stack(
         children: <Widget>[
           Container(
-              padding: const EdgeInsets.all(8.0),
-              child: Text("Source: ${widget.source.toString()}",
-                  style: Theme.of(context).textTheme.titleSmall)),
-          if (isLoading) const LinearProgressIndicator(),
-          Center(
-            child: ColoredBox(
-              color: backgroundColor,
-              child: SVGAImage(
-                animationController!,
-                fit: fit,
-                clearsAfterStop: false,
-                allowDrawingOverflow: allowOverflow,
-                showBorder: showBorder,
-                filterQuality: filterQuality,
-                preferredSize: Size(containerWidth, containerHeight),
-              ),
-            ),
+            padding: const EdgeInsets.all(8.0),
+            child: Text("Source: ${widget.source.toString()}",
+                style: GTextStyles.contentStyle),
+          ),
+          SvgaViewer(
+            animationController: animationController!,
+            model: model,
           ),
           Positioned(bottom: 100, child: _buildOptions(context)),
           Positioned(
@@ -121,6 +66,7 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
             right: 10,
             child: SvgaControlBar(
               animationController: animationController!,
+              model: model,
             ),
           ),
           Positioned(
@@ -327,51 +273,12 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Image filter quality'),
-                  DropdownButton<FilterQuality>(
-                    value: filterQuality,
-                    onChanged: (FilterQuality? newValue) {
-                      setState(() {
-                        filterQuality = newValue!;
-                      });
-                    },
-                    items: FilterQuality.values.map((FilterQuality value) {
-                      return DropdownMenuItem(
-                        value: value,
-                        child: Text(value.toString().split('.').last),
-                      );
-                    }).toList(),
-                  )
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Show border'),
-                  const SizedBox(width: 8),
-                  Switch(
-                    value: showBorder,
-                    onChanged: (v) {
-                      setState(() {
-                        showBorder = v;
-                      });
-                    },
-                  )
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
                   const Text('Allow drawing overflow'),
                   const SizedBox(width: 8),
                   Switch(
-                    value: allowOverflow,
+                    value: model.allowOverflow,
                     onChanged: (v) {
-                      setState(() {
-                        allowOverflow = v;
-                      });
+                      model.changeAllowOverflow(v);
                     },
                   )
                 ],
@@ -380,7 +287,8 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
               Text(
                   'Original size: (${animationController!.width} x ${animationController!.height})'),
               const SizedBox(height: 8),
-              Text('Container options: ($containerWidth x $containerHeight)'),
+              Text(
+                  'Container options: (${model.containerWidth} x ${model.containerHeight})'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -388,12 +296,11 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
                   Slider(
                     min: 1,
                     max: MediaQuery.of(context).size.width.roundToDouble(),
-                    value: containerWidth,
-                    label: '$containerWidth',
+                    value: model.containerWidth,
+                    label: '${model.containerWidth}',
                     onChanged: (v) {
-                      setState(() {
-                        containerWidth = v.truncateToDouble();
-                      });
+                      model.changeContainerSize(
+                          v.truncateToDouble(), model.containerHeight);
                     },
                   ),
                 ],
@@ -405,75 +312,17 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
                   Slider(
                     min: 1,
                     max: MediaQuery.of(context).size.height.roundToDouble(),
-                    label: '$containerHeight',
-                    value: containerHeight,
+                    label: '${model.containerHeight}',
+                    value: model.containerHeight,
                     onChanged: (v) {
-                      setState(() {
-                        containerHeight = v.truncateToDouble();
-                      });
+                      model.changeContainerSize(
+                          model.containerWidth, v.truncateToDouble());
                     },
                   ),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(' box fit: '),
-                  const SizedBox(width: 8),
-                  DropdownButton<BoxFit>(
-                    value: fit,
-                    onChanged: (BoxFit? newValue) {
-                      setState(() {
-                        fit = newValue!;
-                      });
-                    },
-                    items: BoxFit.values.map((BoxFit value) {
-                      return DropdownMenuItem(
-                        value: value,
-                        child: Text(value.toString().split('.').last),
-                      );
-                    }).toList(),
-                  )
-                ],
-              ),
-              const SizedBox(width: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: const [
-                  Colors.transparent,
-                  Colors.red,
-                  Colors.green,
-                  Colors.blue,
-                  Colors.yellow,
-                  Colors.black,
-                ]
-                    .map(
-                      (e) => GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            backgroundColor = e;
-                          });
-                        },
-                        child: Container(
-                          width: 20,
-                          height: 20,
-                          decoration: ShapeDecoration(
-                            color: e,
-                            shape: CircleBorder(
-                              side: backgroundColor == e
-                                  ? const BorderSide(
-                                      color: Colors.white,
-                                      width: 3,
-                                    )
-                                  : const BorderSide(color: Colors.grey),
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                    .toList(),
-              ),
-              const SizedBox(width: 16),
+
+
             ],
           ],
         ),

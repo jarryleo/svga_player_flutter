@@ -3,6 +3,8 @@ import 'package:svga_viewer/page/main_page.dart';
 import 'package:svga_viewer/utils/platform_utils.dart';
 import 'package:window_manager/window_manager.dart';
 
+import 'app.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (PlatFormUtils.isDesktop()) {
@@ -24,11 +26,3 @@ void main() async {
   runApp(const MainApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(theme: ThemeData.dark(), home: MainPage());
-  }
-}
