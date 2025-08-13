@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:svga_viewer/svgaplayer/sprite_info.dart';
 import 'package:svga_viewer/svgaplayer/transformation/ImageTransformation.dart';
+import 'package:svga_viewer/theme/text_styles.dart';
 import 'package:svga_viewer/utils/snack_bar.dart';
 
 import '../svgaplayer/transformation/CircleImageTransformation.dart';
@@ -181,8 +182,8 @@ class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
       children: [
         // 第一行：显示名称
         Text(
-          'key: ${widget.spriteInfo.name} , size: $width x $height , memory: $format ($size)',
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          'key: ${widget.spriteInfo.name} , size: $width x $height , memory: $format',
+          style: GTextStyles.titleStyle,
         ),
         // 第二行：文字输入相关
         if (widget.isExpanded) const SizedBox(height: 10),
@@ -195,8 +196,8 @@ class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
               child: Row(
                 children: [
                   const SizedBox(
-                    width: 45,
-                    child: Text('Text:'),
+                    width: 55,
+                    child: Text('Text:', style: GTextStyles.titleStyle),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
@@ -204,6 +205,7 @@ class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
                       height: 42.0,
                       child: TextField(
                         controller: _textController,
+                        style: GTextStyles.contentStyle,
                         onChanged: (text) {
                           setState(() {
                             widget.spriteInfo.text = text;
@@ -219,7 +221,9 @@ class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
                   const SizedBox(width: 14),
                   ElevatedButton(
                     onPressed: _showTextStyleDialog,
-                    child: const Text('Choose Style'),
+                    child: const Text(
+                      'Choose Style',
+                    ),
                   ),
                 ],
               ),
@@ -235,8 +239,8 @@ class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
               child: Row(
                 children: [
                   const SizedBox(
-                    width: 45,
-                    child: Text('Image:'),
+                    width: 55,
+                    child: Text('Image:', style: GTextStyles.titleStyle),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
@@ -244,6 +248,7 @@ class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
                       height: 42.0, // 设置您需要的固定高度
                       child: TextField(
                         controller: _imageUrlController,
+                        style: GTextStyles.contentStyle,
                         onChanged: (text) {
                           setState(() {
                             widget.spriteInfo.imagePath = text;
@@ -257,10 +262,11 @@ class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  const Text('Shape:'),
+                  const Text('Shape:', style: GTextStyles.titleStyle),
                   const SizedBox(width: 10),
                   DropdownButton<String>(
                     value: _selectedShape,
+                    style: GTextStyles.valueStyle,
                     items: imageTransformations.keys
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
@@ -307,7 +313,7 @@ class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
                           widget.onHighlightChanged?.call(_isHighlighted);
                         },
                       ),
-                      const Text('highlight'),
+                      const Text('highlight', style: GTextStyles.titleStyle),
                     ],
                   ),
                   const Spacer(),

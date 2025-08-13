@@ -24,7 +24,7 @@ class _SvgaControlBarState extends State<SvgaControlBar> {
     return Container(
       height: 60,
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: Colors.white70,
         borderRadius: BorderRadius.all(
           Radius.circular(8),
         ),
@@ -88,83 +88,96 @@ class _SvgaControlBarState extends State<SvgaControlBar> {
                   style: GTextStyles.contentStyle,
                 );
               }),
+          const SizedBox(width: 16),
           const Spacer(),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Overflow:'),
-              const SizedBox(width: 8),
-              Switch(
-                value: widget.model.allowOverflow,
-                onChanged: (v) {
-                  setState(() {
-                    widget.model.changeAllowOverflow(v);
-                  });
-                },
-              )
-            ],
-          ),
-          const SizedBox(width: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Box fit:'),
-              const SizedBox(width: 8),
-              DropdownButton<BoxFit>(
-                value: widget.model.boxFit,
-                onChanged: (BoxFit? newValue) {
-                  setState(() {
-                    widget.model.changeBoxFit(newValue!);
-                  });
-                },
-                items: BoxFit.values.map((BoxFit value) {
-                  return DropdownMenuItem(
-                    value: value,
-                    child: Text(value.toString().split('.').last),
-                  );
-                }).toList(),
-              )
-            ],
-          ),
-          const SizedBox(width: 8),
-          //工作区颜色选择
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
-              GColors.bodyBg,
-              Colors.red,
-              Colors.green,
-              Colors.blue,
-              Colors.yellow,
-              Colors.black,
-            ]
-                .map(
-                  (e) => GestureDetector(
-                    onTap: () {
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Overflow:'),
+                  const SizedBox(width: 8),
+                  Switch(
+                    value: widget.model.allowOverflow,
+                    onChanged: (v) {
                       setState(() {
-                        widget.model.changeBackgroundColor(e);
+                        widget.model.changeAllowOverflow(v);
                       });
                     },
-                    child: Container(
-                      width: 20,
-                      height: 20,
-                      decoration: ShapeDecoration(
-                        color: e,
-                        shape: CircleBorder(
-                          side: widget.model.backgroundColor == e
-                              ? const BorderSide(
-                                  color: Colors.grey,
-                                  width: 3,
-                                )
-                              : const BorderSide(color: Colors.grey),
+                  )
+                ],
+              ),
+              const SizedBox(width: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Box fit:'),
+                  const SizedBox(width: 8),
+                  DropdownButton<BoxFit>(
+                    focusColor: Colors.transparent,
+                    style: GTextStyles.valueStyle,
+                    value: widget.model.boxFit,
+                    onChanged: (BoxFit? newValue) {
+                      setState(() {
+                        widget.model.changeBoxFit(newValue!);
+                      });
+                    },
+                    items: BoxFit.values.map((BoxFit value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(
+                          value.toString().split('.').last,
+                          style: GTextStyles.valueStyle,
                         ),
-                      ),
-                    ),
-                  ),
-                )
-                .toList(),
+                      );
+                    }).toList(),
+                  )
+                ],
+              ),
+              const SizedBox(width: 8),
+              //工作区颜色选择
+              SizedBox(
+                width: 150,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: const [
+                    GColors.lightBlue,
+                    GColors.lightRed,
+                    GColors.lightGreen,
+                    GColors.lightYellow,
+                    Colors.white,
+                    Colors.black,
+                  ]
+                      .map(
+                        (e) => GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              widget.model.changeBackgroundColor(e);
+                            });
+                          },
+                          child: Container(
+                            width: 20,
+                            height: 20,
+                            decoration: ShapeDecoration(
+                              color: e,
+                              shape: CircleBorder(
+                                side: widget.model.backgroundColor == e
+                                    ? const BorderSide(
+                                        color: Colors.grey,
+                                        width: 3,
+                                      )
+                                    : const BorderSide(color: Colors.grey),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+              const SizedBox(width: 16),
+            ],
           ),
-          const SizedBox(width: 16),
         ]),
       ),
     );

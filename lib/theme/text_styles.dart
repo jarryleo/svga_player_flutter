@@ -5,5 +5,6 @@ import 'g_colors.dart';
 
 class GTextStyles {
   static const TextStyle titleStyle = TextStyle(fontSize: 16, color: GColors.mainText,fontWeight: FontWeight.w600);
-  static const TextStyle contentStyle = TextStyle(fontSize: 14, color: GColors.secondaryText,fontWeight: FontWeight.w400);
+  static const TextStyle contentStyle = TextStyle(fontSize: 14, color: GColors.secondaryText,fontWeight: FontWeight.w500);
+  static const TextStyle valueStyle = TextStyle(fontSize: 14, color: GColors.valueText,fontWeight: FontWeight.w500);
 }

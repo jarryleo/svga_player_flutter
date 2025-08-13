@@ -1,5 +1,6 @@
 
 import '../includes.dart';
+import '../theme/g_colors.dart';
 
 class SvgaViewerModel extends ChangeNotifier {
   bool _isLoading = false;
@@ -14,7 +15,7 @@ class SvgaViewerModel extends ChangeNotifier {
   double _containerHeight = 350;
   double get containerHeight => _containerHeight;
 
-  Color _backgroundColor = Colors.white;
+  Color _backgroundColor = GColors.lightBlue;
   Color get backgroundColor => _backgroundColor;
 
   BoxFit _boxFit = BoxFit.contain;

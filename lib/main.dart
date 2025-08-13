@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:svga_viewer/page/main_page.dart';
 import 'package:svga_viewer/utils/platform_utils.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -13,6 +12,7 @@ void main() async {
 
     WindowOptions windowOptions = const WindowOptions(
       size: Size(1000, 700),
+      minimumSize: Size(900, 600),
       center: true,
       skipTaskbar: false,
       titleBarStyle: TitleBarStyle.normal,
@@ -25,4 +25,3 @@ void main() async {
 
   runApp(const MainApp());
 }
-
