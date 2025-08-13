@@ -18,6 +18,8 @@ class SvgaInfoWidget extends StatelessWidget {
     String path = source.source;
     int fileSize = animationController.fileSize;
     String filsSizeText = formatFileSize(fileSize);
+    int memory = animationController.memory;
+    String memoryText = formatFileSize(memory);
     var width = animationController.width;
     var height = animationController.height;
     var fps = animationController.fps;
@@ -43,6 +45,7 @@ class SvgaInfoWidget extends StatelessWidget {
           const SizedBox(height: 16),
           const Text("动画属性", style: GTextStyles.titleStyle),
           const SizedBox(height: 8),
+          _buildInfoItem("内存", memoryText),
           _buildInfoItem("宽度", width.toString()),
           _buildInfoItem("高度", height.toString()),
           _buildInfoItem("帧率", fps.toString()),

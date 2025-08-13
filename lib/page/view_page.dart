@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:svga_viewer/svgaplayer/player.dart';
 import 'package:svga_viewer/svgaplayer/svga_source.dart';
 import 'package:svga_viewer/theme/g_colors.dart';
-import 'package:svga_viewer/theme/text_styles.dart';
 import 'package:svga_viewer/viewmodel/svga_view_model.dart';
 import 'package:svga_viewer/widget/svga_info.dart';
+import 'package:svga_viewer/widget/top_bar.dart';
 
 import '../widget/sprite_list.dart';
 import '../widget/svga_control_bar.dart';
@@ -23,7 +23,6 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
     with SingleTickerProviderStateMixin {
   SVGAAnimationController? animationController;
   SvgaViewerModel model = SvgaViewerModel();
-  bool hideOptions = false;
 
   @override
   void initState() {
@@ -43,7 +42,6 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: GColors.bodyBg,
-      appBar: AppBar(title: Text(widget.source.name ?? "")),
       body: Stack(
         children: <Widget>[
           SvgaViewer(
@@ -51,13 +49,19 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
             model: model,
           ),
           Positioned(
+              top: 10,
+              left: 10,
+              right: 10,
+              child: TopBarWidget(
+                model: model,
+              )),
+          Positioned(
               left: 10,
               bottom: 80,
               child: SvgaInfoWidget(
                 animationController: animationController!,
                 source: widget.source,
-              )
-          ),
+              )),
           Positioned(
             bottom: 10,
             left: 10,
@@ -69,7 +73,7 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
           ),
           Positioned(
             right: 0,
-            top: 10,
+            top: 80,
             bottom: 80,
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 300),
@@ -179,15 +183,18 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
           var textColor = spriteInfo.textColor ?? Colors.white;
           if (string.isNotEmpty) {
             dynamicItem.setText(
-                TextPainter(
-                    text: TextSpan(
-                        text: string,
-                        style: TextStyle(
-                          fontSize: fontSize,
-                          color: textColor,
-                          fontWeight: FontWeight.bold,
-                        ))),
-                key);
+              TextPainter(
+                text: TextSpan(
+                  text: string,
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    color: textColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              key,
+            );
           }
         },
       ),

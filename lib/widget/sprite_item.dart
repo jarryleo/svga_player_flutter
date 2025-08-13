@@ -205,7 +205,7 @@ class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
                       height: 42.0,
                       child: TextField(
                         controller: _textController,
-                        style: GTextStyles.contentStyle,
+                        style: GTextStyles.valueStyle,
                         onChanged: (text) {
                           setState(() {
                             widget.spriteInfo.text = text;
@@ -248,7 +248,7 @@ class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
                       height: 42.0, // 设置您需要的固定高度
                       child: TextField(
                         controller: _imageUrlController,
-                        style: GTextStyles.contentStyle,
+                        style: GTextStyles.valueStyle,
                         onChanged: (text) {
                           setState(() {
                             widget.spriteInfo.imagePath = text;
