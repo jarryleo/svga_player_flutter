@@ -37,7 +37,7 @@ class _MainPageState extends State<MainPage> {
         path: path,
       );
       widget.model.add(item);
-      _goToSample(context, FileItem(name: "file", path: currentFilePath!));
+      _goToSample(context, item);
     }
   }
 
