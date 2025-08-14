@@ -2,7 +2,7 @@ import '../includes.dart';
 import '../theme/g_colors.dart';
 
 class SvgaViewerModel extends ChangeNotifier {
-  static const double defaultSize = 350;
+  static const double defaultSize = 400;
 
   bool _isLoading = true;
 
