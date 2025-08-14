@@ -28,12 +28,12 @@ class _MainPageState extends State<MainPage> {
       backgroundColor: GColors.bodyBg,
       body: Stack(
         children: [
-          Container(
-            margin: const EdgeInsets.only(top: 80.0),
-            child: ListenableBuilder(
-              listenable: widget.model,
-              builder: (context, child) => DragFile(
-                content: widget.model.list.isEmpty
+          DragFile(
+            content: Container(
+              margin: const EdgeInsets.only(top: 80.0),
+              child: ListenableBuilder(
+                listenable: widget.model,
+                builder: (context, child) => widget.model.list.isEmpty
                     ? _buildEmptyWidget(context)
                     : ListView.separated(
                         itemCount: widget.model.list.length,
@@ -55,20 +55,24 @@ class _MainPageState extends State<MainPage> {
                           );
                         },
                       ),
-                onDragDone: (detail) {
-                  widget.model.addAll(detail);
-                  // 使用 WidgetsBinding 确保 setState 完成后再导航
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (widget.model.list.isNotEmpty) {
-                      _goToSample(context, widget.model.list.first);
-                    }
-                  });
-                },
               ),
             ),
+            onDragDone: (files) {
+              widget.model.addAll(files);
+              // 使用 WidgetsBinding 确保 setState 完成后再导航
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (widget.model.list.isNotEmpty) {
+                  _goToSample(context, widget.model.list.first);
+                }
+              });
+            },
           ),
           Positioned(
-              top: 10, left: 10, right: 10, child: _buildMainTopBar(context)),
+            top: 10,
+            left: 10,
+            right: 10,
+            child: _buildMainTopBar(context),
+          ),
         ],
       ),
     );
