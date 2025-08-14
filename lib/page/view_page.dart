@@ -115,6 +115,7 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
               position: _topBarSlideAnimation,
               child: TopBarWidget(
                 model: model,
+                source: widget.source,
               ),
             ),
           ),

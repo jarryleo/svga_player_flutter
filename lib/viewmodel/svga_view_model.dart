@@ -77,18 +77,18 @@ class SvgaViewerModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void zoomIn() {
-    _scale += 0.1;
-    if (_scale > 2) {
-      _scale = 2;
+  void zoomIn({double step = 0.1}) {
+    _scale += step;
+    if (_scale > 3) {
+      _scale = 3;
     }
     _containerWidth = _width * _scale;
     _containerHeight = _height * _scale;
     notifyListeners();
   }
 
-  void zoomOut() {
-    _scale -= 0.1;
+  void zoomOut({double step = 0.1}) {
+    _scale -= step;
     if (_scale < 0.1) {
       _scale = 0.1;
     }

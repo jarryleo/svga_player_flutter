@@ -198,7 +198,7 @@ class _AnimatedSpriteItemState extends State<AnimatedSpriteItem>
         child: SlideTransition(
           position: _offsetAnimation,
           child: Container(
-            margin: const EdgeInsets.all(8.0),
+            margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               color: _isHovered ? Colors.white70 : Colors.transparent,

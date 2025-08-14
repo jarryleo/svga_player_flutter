@@ -1,12 +1,14 @@
 import 'package:svga_viewer/theme/text_styles.dart';
 
 import '../includes.dart';
+import '../svgaplayer/svga_source.dart';
 import '../viewmodel/svga_view_model.dart';
 
 class TopBarWidget extends StatefulWidget {
   final SvgaViewerModel model;
+  final SVGASource source;
 
-  const TopBarWidget({super.key, required this.model});
+  const TopBarWidget({super.key, required this.model, required this.source});
 
   @override
   State<TopBarWidget> createState() => _TopBarWidgetState();
@@ -28,10 +30,18 @@ class _TopBarWidgetState extends State<TopBarWidget> {
         padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
-            Image.asset(
-              "assets/icon/ic_app.png",
-              width: 40,
-              height: 40,
+            IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(Icons.arrow_back_ios_new)
+            ),
+            const SizedBox(
+              width: 8,
+            ),
+            Text(
+              widget.source.name ?? "",
+              style: GTextStyles.titleStyle,
             ),
             const Spacer(),
             Row(children: [
