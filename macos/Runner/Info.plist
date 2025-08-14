@@ -28,5 +28,44 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+		<!-- 添加文件关联 -->
+    	<key>CFBundleDocumentTypes</key>
+    	<array>
+    		<dict>
+    			<key>CFBundleTypeName</key>
+    			<string>SVGA Animation</string>
+    			<key>CFBundleTypeRole</key>
+    			<string>Editor</string>
+    			<key>LSItemContentTypes</key>
+    			<array>
+    				<string>cn.leo.svga</string>
+    			</array>
+    		</dict>
+    	</array>
+    	
+    	<key>UTExportedTypeDeclarations</key>
+    	<array>
+    		<dict>
+    			<key>UTTypeIdentifier</key>
+    			<string>cn.leo.svga</string>
+    			<key>UTTypeName</key>
+    			<string>SVGA Animation</string>
+    			<key>UTTypeConformsTo</key>
+    			<array>
+    				<string>public.data</string>
+    			</array>
+    			<key>UTTypeDescription</key>
+    			<string>SVGA Animation File</string>
+    			<key>UTTypeIconFile</key>
+    			<string>your-icon.icns</string>
+    			<key>UTTypeTagSpecification</key>
+    			<dict>
+    				<key>public.filename-extension</key>
+    				<array>
+    					<string>svga</string>
+    				</array>
+    			</dict>
+    		</dict>
+    	</array>
 </dict>
 </plist>

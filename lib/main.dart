@@ -1,10 +1,11 @@
+import 'package:args/args.dart';
 import 'package:flutter/material.dart';
 import 'package:svga_viewer/utils/platform_utils.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'app.dart';
 
-void main() async {
+void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   if (PlatFormUtils.isDesktop()) {
     // Must add this line.
@@ -22,6 +23,13 @@ void main() async {
       await windowManager.focus();
     });
   }
-
-  runApp(const MainApp());
+// 解析命令行参数
+  final parser = ArgParser();
+  final results = parser.parse(args);
+  // 获取文件路径（第一个参数）
+  String? filePath;
+  if (results.rest.isNotEmpty) {
+    filePath = results.rest.first;
+  }
+  runApp(MainApp(initialFile: filePath));
 }

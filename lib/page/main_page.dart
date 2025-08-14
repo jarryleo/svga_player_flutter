@@ -5,7 +5,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:svga_viewer/svgaplayer/svga_source.dart';
 import 'package:svga_viewer/theme/text_styles.dart';
-import 'package:svga_viewer/utils/platform_utils.dart';
 import 'package:svga_viewer/viewmodel/file_item.dart';
 import 'package:svga_viewer/viewmodel/svga_file_list_model.dart';
 import 'package:svga_viewer/widget/drag_file.dart';
@@ -14,15 +13,34 @@ import '../theme/g_colors.dart';
 import 'view_page.dart';
 
 class MainPage extends StatefulWidget {
+  final String? initialFile;
   final SvgaFileListModel model = SvgaFileListModel();
 
-  MainPage({super.key});
+  MainPage({super.key, this.initialFile});
 
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
+  String? currentFilePath;
+
+  @override
+  void initState() {
+    currentFilePath = widget.initialFile;
+    super.initState();
+    var path = currentFilePath;
+    if (path != null) {
+      var name = path.split(Platform.pathSeparator).last;
+      var item = FileItem(
+        name: name,
+        path: path,
+      );
+      widget.model.add(item);
+      _goToSample(context, FileItem(name: "file", path: currentFilePath!));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
