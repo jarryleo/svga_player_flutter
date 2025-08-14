@@ -108,6 +108,8 @@ class _MainPageState extends State<MainPage> {
         ),
         child: Row(
           children: [
+            const Image(image: AssetImage('assets/icon/ic_app.png')),
+            const SizedBox(width: 16.0),
             const Text(
               'SVGA Viewer',
               style: TextStyle(
