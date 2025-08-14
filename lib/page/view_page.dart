@@ -23,10 +23,14 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
     with TickerProviderStateMixin {
   SVGAAnimationController? animationController;
   SvgaViewerModel model = SvgaViewerModel();
+
   // 在状态类中添加标志
   bool _isLoaded = false;
+  bool _isError = false; // 添加错误状态标志
+
   // 添加动画控制器
-  late AnimationController _animationController;
+  late AnimationController _animationController; // 控制除TopBar外其他组件的动画
+  late AnimationController _topBarAnimationController; // 专门控制TopBar的动画
   late Animation<Offset> _topBarSlideAnimation;
   late Animation<Offset> _bottomBarSlideAnimation;
   late Animation<Offset> _leftInfoSlideAnimation;
@@ -37,20 +41,29 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
     super.initState();
     animationController = SVGAAnimationController(vsync: this);
 
-    // 初始化动画控制器
-    _animationController = AnimationController(
+    // 初始化TopBar专用动画控制器
+    _topBarAnimationController = AnimationController(
       duration: const Duration(milliseconds: 500),
       vsync: this,
     );
 
-    // 创建动画
+    // 创建TopBar动画（页面加载时立即执行）
     _topBarSlideAnimation = Tween<Offset>(
       begin: const Offset(0, -1),
       end: Offset.zero,
     ).animate(CurvedAnimation(
-      parent: _animationController,
+      parent: _topBarAnimationController,
       curve: Curves.easeOut,
     ));
+
+    // 立即启动TopBar动画
+    _topBarAnimationController.forward();
+
+    // 初始化其他组件的动画控制器
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
 
     _bottomBarSlideAnimation = Tween<Offset>(
       begin: const Offset(0, 1),
@@ -83,8 +96,13 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
         model.setSize(animationController!.width, animationController!.height);
         _isLoaded = true; // 标记加载完成
       });
-      // 加载成功后启动动画
+      // 加载成功后启动其他组件的动画
       _animationController.forward();
+    }, onError: (e) {
+      setState(() {
+        model.changeIsLoading(false);
+        _isError = true; // 标记加载失败
+      });
     });
   }
 
@@ -93,8 +111,10 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
     animationController?.dispose();
     animationController = null;
     _animationController.dispose();
+    _topBarAnimationController.dispose(); // 释放TopBar动画控制器
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -102,11 +122,16 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
       backgroundColor: GColors.bodyBg,
       body: Stack(
         children: <Widget>[
-          SvgaViewer(
-            animationController: animationController!,
-            model: model,
-          ),
-          // TopBarWidget 从顶部滑入
+          // 根据状态显示不同内容
+          if (_isError)
+            _buildErrorPage() // 显示错误页面
+          else
+            SvgaViewer(
+              animationController: animationController!,
+              model: model,
+            ),
+
+          // TopBarWidget 从顶部滑入（始终显示）
           Positioned(
             top: 10,
             left: 10,
@@ -119,40 +144,102 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
               ),
             ),
           ),
-          // SvgaInfoWidget 从左边滑入
-          Positioned(
-            left: 10,
-            bottom: 80,
-            child: SlideTransition(
-              position: _leftInfoSlideAnimation,
-              child: SvgaInfoWidget(
-                animationController: animationController!,
-                source: widget.source,
+
+          // 其他组件只在非错误状态下显示，并保持原有的动画逻辑
+          if (!_isError) ...[
+            // SvgaInfoWidget 从左边滑入
+            Positioned(
+              left: 10,
+              bottom: 80,
+              child: SlideTransition(
+                position: _leftInfoSlideAnimation,
+                child: SvgaInfoWidget(
+                  animationController: animationController!,
+                  source: widget.source,
+                ),
               ),
             ),
-          ),
-          // SvgaControlBar 从底部滑入
-          Positioned(
-            bottom: 10,
-            left: 10,
-            right: 10,
-            child: SlideTransition(
-              position: _bottomBarSlideAnimation,
-              child: SvgaControlBar(
-                animationController: animationController!,
-                model: model,
+            // SvgaControlBar 从底部滑入
+            Positioned(
+              bottom: 10,
+              left: 10,
+              right: 10,
+              child: SlideTransition(
+                position: _bottomBarSlideAnimation,
+                child: SvgaControlBar(
+                  animationController: animationController!,
+                  model: model,
+                ),
               ),
             ),
-          ),
-          // SpriteInfoList 从右侧滑入
-          Positioned(
-            right: 0,
-            top: 80,
-            bottom: 80,
-            child: SlideTransition(
-              position: _rightSpriteListSlideAnimation,
-              child: _buildSpriteInfoList(context),
+            // SpriteInfoList 从右侧滑入
+            Positioned(
+              right: 0,
+              top: 80,
+              bottom: 80,
+              child: SlideTransition(
+                position: _rightSpriteListSlideAnimation,
+                child: _buildSpriteInfoList(context),
+              ),
             ),
+          ]
+        ],
+      ),
+    );
+  }
+
+  // 构建错误页面
+  Widget _buildErrorPage() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.error_outline,
+            size: 80,
+            color: Colors.red,
+          ),
+          const SizedBox(height: 20),
+          const Text(
+            '加载失败',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.black54,
+            ),
+          ),
+          const SizedBox(height: 10),
+          const Text(
+            '无法加载SVGA动画文件',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.black54,
+            ),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              // 重新加载
+              setState(() {
+                _isError = false;
+                model.changeIsLoading(true);
+              });
+              animationController?.load(widget.source, onSuccess: (e) {
+                setState(() {
+                  model.changeIsLoading(false);
+                  model.setSize(animationController!.width, animationController!.height);
+                  _isLoaded = true;
+                  _isError = false;
+                });
+                _animationController.forward();
+              }, onError: (e) {
+                setState(() {
+                  model.changeIsLoading(false);
+                  _isError = true;
+                });
+              });
+            },
+            child: const Text('重新加载'),
           ),
         ],
       ),
@@ -215,8 +302,7 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
                   videoItem?.highlights.clear();
                 },
                 onApplyPressed: (spriteInfo) {
-                  var dynamicItem =
-                      animationController?.videoItem?.dynamicItem;
+                  var dynamicItem = animationController?.videoItem?.dynamicItem;
                   if (dynamicItem == null) {
                     return;
                   }

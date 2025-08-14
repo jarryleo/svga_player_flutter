@@ -19,7 +19,7 @@ class SvgaViewer extends StatelessWidget {
           return Stack(
             children: [
               Center(
-                child: Container(
+                child: model.isLoading ? const CircularProgressIndicator() : Container(
                   decoration: BoxDecoration(
                     color: model.backgroundColor,
                     boxShadow: [
@@ -39,7 +39,6 @@ class SvgaViewer extends StatelessWidget {
                   ),
                 ),
               ),
-              if (model.isLoading) const CircularProgressIndicator(),
             ],
           );
         });
