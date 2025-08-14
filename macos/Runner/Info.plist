@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIconFile</key>
-	<string></string>
+	<string>app_icon.icns</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -28,44 +28,73 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-		<!-- 添加文件关联 -->
-    	<key>CFBundleDocumentTypes</key>
-    	<array>
-    		<dict>
-    			<key>CFBundleTypeName</key>
-    			<string>SVGA Animation</string>
-    			<key>CFBundleTypeRole</key>
-    			<string>Editor</string>
-    			<key>LSItemContentTypes</key>
-    			<array>
-    				<string>cn.leo.svga</string>
-    			</array>
-    		</dict>
-    	</array>
-    	
-    	<key>UTExportedTypeDeclarations</key>
-    	<array>
-    		<dict>
-    			<key>UTTypeIdentifier</key>
-    			<string>cn.leo.svga</string>
-    			<key>UTTypeName</key>
-    			<string>SVGA Animation</string>
-    			<key>UTTypeConformsTo</key>
-    			<array>
-    				<string>public.data</string>
-    			</array>
-    			<key>UTTypeDescription</key>
-    			<string>SVGA Animation File</string>
-    			<key>UTTypeIconFile</key>
-    			<string>your-icon.icns</string>
-    			<key>UTTypeTagSpecification</key>
-    			<dict>
-    				<key>public.filename-extension</key>
-    				<array>
-    					<string>svga</string>
-    				</array>
-    			</dict>
-    		</dict>
-    	</array>
+
+	<!-- 文件关联 -->
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>SVGA Animation File</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>cn.leo.svga</string>
+			</array>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>svga</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>app_icon.icns</string>
+			<key>LSIsAppleDefaultForType</key>
+			<true/>
+		</dict>
+	</array>
+
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>cn.leo.svga</string>
+			<key>UTTypeName</key>
+			<string>SVGA Animation</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.content</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>SVGA Animation File</string>
+			<key>UTTypeIconFile</key>
+			<string>app_icon.icns</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>svga</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
+
+	<!-- 访问下载文件夹 -->
+	<key>NSDownloadsFolderUsageDescription</key>
+	<string>需要访问您的下载文件夹以读取/保存SVGA动画文件</string>
+
+	<!-- 访问文档文件夹 -->
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>需要访问您的文档文件夹以读取/保存SVGA动画文件</string>
+
+	<!-- 访问桌面文件夹 -->
+	<key>NSDesktopFolderUsageDescription</key>
+	<string>需要访问您的桌面文件夹以读取/保存SVGA动画文件</string>
+
+	<!-- 访问所有文件（完整磁盘访问权限） -->
+	<key>NSFileAccessUsageDescription</key>
+	<string>需要访问您的文件以处理SVGA动画</string>
+
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+    <true/>
 </dict>
 </plist>
