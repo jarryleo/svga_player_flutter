@@ -181,13 +181,41 @@ class _AnimatedSpriteItemState extends State<AnimatedSpriteItem>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onTap,
+      onTap: (){
+        if(_isHovered) {
+          widget.onTap();
+        }
+      },
       child: MouseRegion(
-        onEnter: (_) {
-          setState(() {
-            _isHovered = true;
-          });
-          _controller.forward();
+        onEnter: (event) {
+          final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
+          if (renderBox != null) {
+            final position = event.localPosition;
+            final width = renderBox.size.width;
+            if (position.dx > width / 2) {
+              setState(() {
+                _isHovered = true;
+              });
+              _controller.forward();
+            }
+          }
+        },
+        onHover: (event) {
+          if (_isHovered) {
+            return;
+          }
+          final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
+          if (renderBox != null) {
+            final position = event.localPosition;
+            final width = renderBox.size.width;
+
+            if (position.dx > width / 2) {
+              setState(() {
+                _isHovered = true;
+              });
+              _controller.forward();
+            }
+          }
         },
         onExit: (_) {
           setState(() {
