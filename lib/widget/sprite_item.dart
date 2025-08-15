@@ -177,187 +177,193 @@ class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
     var width = widget.spriteInfo.width ?? 0;
     var height = widget.spriteInfo.height ?? 0;
     String format = formatFileSize(size);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // 第一行：显示名称
-        Text(
-          'key: ${widget.spriteInfo.name} , size: $width x $height , memory: $format',
-          style: GTextStyles.titleStyle,
-        ),
-        // 第二行：文字输入相关
-        if (widget.isExpanded) const SizedBox(height: 10),
-        if (widget.isExpanded)
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            child: Container(
-              key: const ValueKey('textRow'),
-              margin: const EdgeInsets.only(bottom: 10),
-              child: Row(
-                children: [
-                  const SizedBox(
-                    width: 55,
-                    child: Text('Text:', style: GTextStyles.titleStyle),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: SizedBox(
-                      height: 42.0,
-                      child: TextField(
-                        controller: _textController,
-                        style: GTextStyles.valueStyle,
-                        onChanged: (text) {
-                          setState(() {
-                            widget.spriteInfo.text = text;
-                          });
-                        },
-                        decoration: const InputDecoration(
-                          hintText: 'input dynamic text',
-                          border: OutlineInputBorder(),
+
+    return AnimatedSize(
+      alignment: Alignment.topLeft,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 第一行：显示名称
+          Text(
+            'key: ${widget.spriteInfo.name} , size: $width x $height , memory: $format',
+            style: GTextStyles.contentStyle,
+          ),
+          // 第二行：文字输入相关
+          if (widget.isExpanded) const SizedBox(height: 10),
+          if (widget.isExpanded)
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: Container(
+                key: const ValueKey('textRow'),
+                margin: const EdgeInsets.only(bottom: 10),
+                child: Row(
+                  children: [
+                    const SizedBox(
+                      width: 55,
+                      child: Text('Text:', style: GTextStyles.titleStyle),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: SizedBox(
+                        height: 42.0,
+                        child: TextField(
+                          controller: _textController,
+                          style: GTextStyles.valueStyle,
+                          onChanged: (text) {
+                            setState(() {
+                              widget.spriteInfo.text = text;
+                            });
+                          },
+                          decoration: const InputDecoration(
+                            hintText: 'input dynamic text',
+                            border: OutlineInputBorder(),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 14),
-                  ElevatedButton(
-                    onPressed: _showTextStyleDialog,
-                    child: const Text(
-                      'Choose Style',
+                    const SizedBox(width: 14),
+                    ElevatedButton(
+                      onPressed: _showTextStyleDialog,
+                      child: const Text(
+                        'Choose Style',
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
 
-        // 第三行：图片输入相关
-        if (widget.isExpanded)
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            child: Container(
-              key: const ValueKey('imageRow'),
-              child: Row(
-                children: [
-                  const SizedBox(
-                    width: 55,
-                    child: Text('Image:', style: GTextStyles.titleStyle),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: SizedBox(
-                      height: 42.0, // 设置您需要的固定高度
-                      child: TextField(
-                        controller: _imageUrlController,
-                        style: GTextStyles.valueStyle,
-                        onChanged: (text) {
-                          setState(() {
-                            widget.spriteInfo.imagePath = text;
-                          });
-                        },
-                        decoration: const InputDecoration(
-                          hintText: 'input image url here',
-                          border: OutlineInputBorder(),
+          // 第三行：图片输入相关
+          if (widget.isExpanded)
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: Container(
+                key: const ValueKey('imageRow'),
+                child: Row(
+                  children: [
+                    const SizedBox(
+                      width: 55,
+                      child: Text('Image:', style: GTextStyles.titleStyle),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: SizedBox(
+                        height: 42.0, // 设置您需要的固定高度
+                        child: TextField(
+                          controller: _imageUrlController,
+                          style: GTextStyles.valueStyle,
+                          onChanged: (text) {
+                            setState(() {
+                              widget.spriteInfo.imagePath = text;
+                            });
+                          },
+                          decoration: const InputDecoration(
+                            hintText: 'input image url here',
+                            border: OutlineInputBorder(),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  const Text('Shape:', style: GTextStyles.titleStyle),
-                  const SizedBox(width: 10),
-                  DropdownButton<String>(
-                    value: _selectedShape,
-                    style: GTextStyles.valueStyle,
-                    items: imageTransformations.keys
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      if (newValue != null) {
+                    const SizedBox(width: 10),
+                    const Text('Shape:', style: GTextStyles.titleStyle),
+                    const SizedBox(width: 10),
+                    DropdownButton<String>(
+                      value: _selectedShape,
+                      style: GTextStyles.valueStyle,
+                      items: imageTransformations.keys
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          setState(() {
+                            _selectedShape = newValue;
+                            widget.spriteInfo.imageTransformation =
+                                imageTransformations[newValue];
+                          });
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+          // 第四行：新增功能行
+          if (widget.isExpanded)
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: Container(
+                key: const ValueKey('actionRow'),
+                margin: const EdgeInsets.only(top: 10),
+                child: Row(
+                  children: [
+                    // 左侧勾选框
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Checkbox(
+                          value: _isHighlighted,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              _isHighlighted = value ?? false;
+                              widget.spriteInfo.isHighlight = _isHighlighted;
+                            });
+                            // 反馈到控件外部
+                            widget.onHighlightChanged?.call(_isHighlighted);
+                          },
+                        ),
+                        const Text('highlight', style: GTextStyles.titleStyle),
+                      ],
+                    ),
+                    const Spacer(),
+                    ElevatedButton(
+                      onPressed: () {
+                        var key = widget.spriteInfo.name;
+                        //复制到剪切板
+                        Clipboard.setData(ClipboardData(text: key));
+                        //提示复制成功
+                        showToast(context, "copied!");
+                      },
+                      child: const Text('Copy Key'),
+                    ),
+                    const SizedBox(width: 10),
+                    // 中间清除按钮
+                    ElevatedButton(
+                      onPressed: () {
+                        // 清除文本和图片输入
                         setState(() {
-                          _selectedShape = newValue;
-                          widget.spriteInfo.imageTransformation =
-                              imageTransformations[newValue];
+                          _textController.clear();
+                          _imageUrlController.clear();
+                          _isHighlighted = false;
+                          widget.spriteInfo.text = null;
+                          widget.spriteInfo.imagePath = null;
                         });
-                      }
-                    },
-                  ),
-                ],
+                        // 反馈到控件外部
+                        widget.onClearPressed?.call();
+                      },
+                      child: const Text('Clear'),
+                    ),
+                    const SizedBox(width: 10),
+                    // 右侧应用按钮
+                    ElevatedButton(
+                      onPressed: () {
+                        // 反馈到控件外部
+                        widget.onApplyPressed?.call();
+                      },
+                      child: const Text('Apply'),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-
-        // 第四行：新增功能行
-        if (widget.isExpanded)
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            child: Container(
-              key: const ValueKey('actionRow'),
-              margin: const EdgeInsets.only(top: 10),
-              child: Row(
-                children: [
-                  // 左侧勾选框
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Checkbox(
-                        value: _isHighlighted,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _isHighlighted = value ?? false;
-                            widget.spriteInfo.isHighlight = _isHighlighted;
-                          });
-                          // 反馈到控件外部
-                          widget.onHighlightChanged?.call(_isHighlighted);
-                        },
-                      ),
-                      const Text('highlight', style: GTextStyles.titleStyle),
-                    ],
-                  ),
-                  const Spacer(),
-                  ElevatedButton(
-                    onPressed: () {
-                      var key = widget.spriteInfo.name;
-                      //复制到剪切板
-                      Clipboard.setData(ClipboardData(text: key));
-                      //提示复制成功
-                      showToast(context, "copied!");
-                    },
-                    child: const Text('Copy Key'),
-                  ),
-                  const SizedBox(width: 10),
-                  // 中间清除按钮
-                  ElevatedButton(
-                    onPressed: () {
-                      // 清除文本和图片输入
-                      setState(() {
-                        _textController.clear();
-                        _imageUrlController.clear();
-                        _isHighlighted = false;
-                        widget.spriteInfo.text = null;
-                        widget.spriteInfo.imagePath = null;
-                      });
-                      // 反馈到控件外部
-                      widget.onClearPressed?.call();
-                    },
-                    child: const Text('Clear'),
-                  ),
-                  const SizedBox(width: 10),
-                  // 右侧应用按钮
-                  ElevatedButton(
-                    onPressed: () {
-                      // 反馈到控件外部
-                      widget.onApplyPressed?.call();
-                    },
-                    child: const Text('Apply'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }
