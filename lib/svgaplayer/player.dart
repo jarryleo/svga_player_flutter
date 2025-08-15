@@ -3,6 +3,7 @@ library svgaplayer_flutter_player;
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_drawing/path_drawing.dart';
@@ -77,6 +78,9 @@ class SVGAAnimationController extends AnimationController {
       }
       onSuccess?.call(value);
     }).catchError((err) {
+      if (kDebugMode) {
+        print(err);
+      }
       onError?.call(err);
     });
   }
