@@ -16,6 +16,7 @@ void main(List<String> args) async {
       minimumSize: Size(900, 600),
       center: true,
       skipTaskbar: false,
+      title: "SVGA Viewer (by: Jarry Leo)",
       titleBarStyle: TitleBarStyle.normal,
     );
     windowManager.waitUntilReadyToShow(windowOptions, () async {
@@ -23,12 +24,11 @@ void main(List<String> args) async {
       await windowManager.focus();
     });
   }
-// 解析命令行参数
+  // 解析命令行参数
   final parser = ArgParser();
   final results = parser.parse(args);
-  // 获取文件路径（第一个参数）
-  String? filePath;
-  if (results.rest.isNotEmpty) {
+  String filePath = args.firstWhere((element) => element.endsWith(".svga"), orElse: () => '');
+  if (filePath.isEmpty && results.rest.isNotEmpty) {
     filePath = results.rest.first;
   }
   runApp(MainApp(initialFile: filePath));

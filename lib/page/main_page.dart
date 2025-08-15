@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:svga_viewer/svgaplayer/svga_source.dart';
 import 'package:svga_viewer/theme/text_styles.dart';
+import 'package:svga_viewer/utils/file_open_handler.dart';
 import 'package:svga_viewer/viewmodel/file_item.dart';
 import 'package:svga_viewer/viewmodel/svga_file_list_model.dart';
 import 'package:svga_viewer/widget/drag_file.dart';
@@ -30,7 +31,7 @@ class _MainPageState extends State<MainPage> {
     currentFilePath = widget.initialFile;
     super.initState();
     var path = currentFilePath;
-    if (path != null) {
+    if (path != null && path.isNotEmpty) {
       var name = path.split(Platform.pathSeparator).last;
       var item = FileItem(
         name: name,
@@ -39,6 +40,15 @@ class _MainPageState extends State<MainPage> {
       widget.model.add(item);
       _goToSample(context, item);
     }
+    FileOpenHandler.setupFileOpenListener((path1) {
+      var name = path1.split(Platform.pathSeparator).last;
+      var item = FileItem(
+        name: name,
+        path: path1,
+      );
+      widget.model.add(item);
+      _goToSample(context, item);
+    });
   }
 
   @override

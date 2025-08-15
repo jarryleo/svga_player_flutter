@@ -79,7 +79,7 @@ class SVGAAnimationController extends AnimationController {
       onSuccess?.call(value);
     }).catchError((err) {
       if (kDebugMode) {
-        print(err);
+        print("$err\nsource = ${source.source}");
       }
       onError?.call(err);
     });
