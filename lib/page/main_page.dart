@@ -40,14 +40,18 @@ class _MainPageState extends State<MainPage> {
       widget.model.add(item);
       _goToSample(context, item);
     }
-    FileOpenHandler.setupFileOpenListener((path1) {
-      var name = path1.split(Platform.pathSeparator).last;
-      var item = FileItem(
-        name: name,
-        path: path1,
-      );
-      widget.model.add(item);
-      _goToSample(context, item);
+    FileOpenHandler.setupFileOpenListener((pathList) {
+      var itemList = pathList.map((path) {
+        var name = path.split(Platform.pathSeparator).last;
+        return FileItem(
+          name: name,
+          path: path,
+        );
+      }).toList();
+      widget.model.addAll(itemList);
+      if (itemList.isNotEmpty) {
+        _goToSample(context, itemList.first);
+      }
     });
   }
 

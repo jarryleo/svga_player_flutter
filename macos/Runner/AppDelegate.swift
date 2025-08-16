@@ -17,45 +17,29 @@ class AppDelegate: FlutterAppDelegate {
   }
 
   // 处理文件打开事件
-  override func application(_ sender: NSApplication, openFile filename: String) -> Bool {
+  override func application(_ sender: NSApplication, open urls: [URL]) {
     let controller : FlutterViewController = mainFlutterWindow?.contentViewController as! FlutterViewController
 
     let channel = FlutterMethodChannel(
       name: "cn.leo/fileOpen",
       binaryMessenger: controller.engine.binaryMessenger
     )
+    // 将 URL 数组转换为文件路径字符串数组
+    let filePaths = urls.map { $0.path }
 
     // 确保在主线程中调用
     DispatchQueue.main.async {
-      channel.invokeMethod("openFile", arguments: filename)
+      channel.invokeMethod("openFile", arguments: filePaths)
     }
-
-    return true
+//     showMessage(question: "application", text: "urls = " + urls.description)
   }
 
-  // 添加命令行参数处理
-  override func applicationDidFinishLaunching(_ notification: Notification) {
-    // 获取命令行参数
-    let arguments = ProcessInfo.processInfo.arguments
-
-    // 如果有参数，传递给 Dart
-    if arguments.count >= 1 {
-      let controller : FlutterViewController = mainFlutterWindow?.contentViewController as! FlutterViewController
-
-      let channel = FlutterMethodChannel(
-        name: "cn.leo/fileOpen",
-        binaryMessenger: controller.engine.binaryMessenger
-      )
-
-      // 查找 .svga 文件参数
-      for arg in arguments {
-        if arg.hasSuffix(".svga") {
-          DispatchQueue.main.async {
-            channel.invokeMethod("openFile", arguments: arg)
-          }
-          break
-        }
-      }
-    }
-  }
+//   func showMessage(question: String, text: String) {
+//     let alert = NSAlert()
+//     alert.messageText = question
+//     alert.informativeText = text
+//     alert.addButton(withTitle: "OK")
+//     alert.alertStyle = .warning
+//     alert.runModal()
+//   }
 }

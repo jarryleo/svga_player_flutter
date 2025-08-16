@@ -27,8 +27,6 @@
 			<array>
 				<string>cn.leo.svga</string>
 			</array>
-			<key>NSDocumentClass</key>
-			<string></string>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
