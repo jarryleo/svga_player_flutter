@@ -8,9 +8,11 @@ class FileOpenHandler {
     platform.setMethodCallHandler((call) async {
       try {
         if (call.method == 'openFile') {
-          final String filePath = call.arguments;
-          if (filePath.isNotEmpty) {
-            handleOpenedFile(filePath);
+          if (call.arguments is String) {
+            final String filePath = call.arguments;
+            if (filePath.isNotEmpty) {
+              handleOpenedFile(filePath);
+            }
           }
         }
       } catch (e) {

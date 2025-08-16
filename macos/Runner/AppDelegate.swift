@@ -32,4 +32,30 @@ class AppDelegate: FlutterAppDelegate {
 
     return true
   }
+
+  // 添加命令行参数处理
+  override func applicationDidFinishLaunching(_ notification: Notification) {
+    // 获取命令行参数
+    let arguments = ProcessInfo.processInfo.arguments
+
+    // 如果有参数，传递给 Dart
+    if arguments.count >= 1 {
+      let controller : FlutterViewController = mainFlutterWindow?.contentViewController as! FlutterViewController
+
+      let channel = FlutterMethodChannel(
+        name: "cn.leo/fileOpen",
+        binaryMessenger: controller.engine.binaryMessenger
+      )
+
+      // 查找 .svga 文件参数
+      for arg in arguments {
+        if arg.hasSuffix(".svga") {
+          DispatchQueue.main.async {
+            channel.invokeMethod("openFile", arguments: arg)
+          }
+          break
+        }
+      }
+    }
+  }
 }
