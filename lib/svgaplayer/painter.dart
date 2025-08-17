@@ -73,8 +73,9 @@ class _SVGAPainter extends CustomPainter {
       //如果被暂停了
       var audioKey = entity.audioKey;
       bool isPause = audioPlayerService.isPause(audioKey) == true;
-      var startFrame = entity.startFrame;
+      var startFrame = entity.startFrame.clamp(2, controller.frames); //fix 刚启动第一帧可能是2，导致没有声音问题
       var endFrame = entity.endFrame;
+      print('playAudio currentFrame = $currentFrame, startFrame = $startFrame, endFrame = $endFrame');
       //计算进度，恢复播放
       if (isPause && frameIndex > startFrame && frameIndex < endFrame) {
         double per = (frameIndex - startFrame) / (endFrame - startFrame);
