@@ -1,20 +1,15 @@
 # svga_viewer
 
-A new Flutter project for SvgaPlayer.
+Svga Viewer 1.0.2 版本
 
-## Getting Started
+web地址：[https://jarryleo.github.io/](https://jarryleo.github.io/)
+windows 下载地址：  
+[下载windows安装包](https://github.com/jarryleo/svga_player_flutter/releases/download/1.0.2/SvgaViewer1.0.2.exe)
+Mac 下载地址：  
+[下载mac安装包](https://github.com/jarryleo/svga_player_flutter/releases/download/1.0.2/SvgaViewer1.0.2.dmg)
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
+create dmg:
 ```
 flutter build macos
 cd Installers/
