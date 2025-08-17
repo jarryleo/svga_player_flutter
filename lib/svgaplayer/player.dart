@@ -173,12 +173,10 @@ class SVGAAnimationController extends AnimationController {
     for (var element in videoItem.bitmapCache.values) {
       size += estimateImageMemory(element);
     }
-    for (var element in videoItem.audioDataMap.values) {
-      size += element.length;
-    }
     for (var element in videoItem.dynamicItem.dynamicImages.values) {
       size += estimateImageMemory(element);
     }
+    size += videoItem.audioMemery;
     return size;
   }
 
@@ -204,17 +202,13 @@ class SVGAAnimationController extends AnimationController {
 
   /// 设置音量
   void setVolume(double volume) {
-    _videoItem?.audioPlayerMap.values.forEach((player) {
-      player.setVolume(volume);
-    });
+    _videoItem?.audioPlayerService?.setAllVolume(volume);
   }
 
   @override
   void stop({bool canceled = true}) {
     super.stop(canceled: canceled);
-    _videoItem?.audioPlayerMap.values.forEach((player) {
-      player.stop();
-    });
+    _videoItem?.audioPlayerService?.pauseAll();
   }
 
   @override

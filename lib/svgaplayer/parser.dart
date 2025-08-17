@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart' show decodeImageFromList;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' show get;
-import 'package:svga_viewer/svgaplayer/audio_player.dart';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'proto/svga.pbserver.dart';
@@ -88,13 +87,13 @@ class SVGAParser {
     return Future.wait(images.entries.map((item) async {
       // result null means a decoding error occurred
       var bytes = Uint8List.fromList(item.value);
-      if (_isAudioData(bytes)){
-        movieItem.audioDataMap[item.key] = bytes;
-        movieItem.audioPlayerMap[item.key] = await AudioPlayerService.init(bytes);
-      }else {
-        final decodeImage = await _decodeImageItem(
-            item.key, bytes,
-            timeline: timeline);
+      if (_isAudioData(bytes)) {
+        movieItem.audioMemery += bytes.length;
+        var audioPlayer = await movieItem.getAudioPlayer();
+        await audioPlayer?.load(item.key, bytes);
+      } else {
+        final decodeImage =
+            await _decodeImageItem(item.key, bytes, timeline: timeline);
         if (decodeImage != null) {
           movieItem.bitmapCache[item.key] = decodeImage;
           movieItem.spriteInfoMap[item.key] = SpriteInfo(

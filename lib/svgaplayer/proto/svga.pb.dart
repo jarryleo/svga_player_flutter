@@ -2228,10 +2228,15 @@ class MovieEntity extends $pb.GeneratedMessage {
   Map<String, ui.Image> bitmapCache = {};
   Map<String, ui.Path> pathCache = {};
   Map<String, SpriteInfo> spriteInfoMap = {};
-  Map<String, List<int>> audioDataMap = {};
-  Map<String, AudioPlayerService> audioPlayerMap = {};
+  AudioPlayerService? audioPlayerService;
   List<String> highlights = [];
   int fileSize = 0;
+  int audioMemery = 0;
+
+  $core.Future<AudioPlayerService?> getAudioPlayer() async{
+    audioPlayerService ??= await AudioPlayerService.init();
+    return audioPlayerService;
+  }
 
   void dispose() {
     bitmapCache.values.forEach((element) {
@@ -2239,10 +2244,6 @@ class MovieEntity extends $pb.GeneratedMessage {
     });
     bitmapCache.clear();
     pathCache.clear();
-    audioDataMap.clear();
-    audioPlayerMap.values.forEach((player) {
-      player.dispose();
-    });
-    audioPlayerMap.clear();
+    audioPlayerService?.disposeAll();
   }
 }

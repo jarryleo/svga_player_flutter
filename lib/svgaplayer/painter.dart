@@ -5,6 +5,7 @@ class _SVGAPainter extends CustomPainter {
   final SVGAAnimationController controller;
 
   int get currentFrame => controller.currentFrame;
+  int lastFrame = -1;
 
   MovieEntity get videoItem => controller.videoItem!;
   final FilterQuality filterQuality;
@@ -56,19 +57,39 @@ class _SVGAPainter extends CustomPainter {
   }
 
   void playAudio() {
+    if (lastFrame == currentFrame) {
+      return;
+    }
+    lastFrame = currentFrame;
+    if (!controller.isAnimating) {
+      return;
+    }
+    var audioPlayerService = videoItem.audioPlayerService;
+    if (audioPlayerService == null) {
+      return;
+    }
     var frameIndex = currentFrame;
     videoItem.audios.forEach((entity) {
-      if (entity.startFrame == frameIndex) {
-        //开始播放对应音频
-        var audioKey = entity.audioKey;
-        var player = videoItem.audioPlayerMap[audioKey];
-        player?.play();
+      //如果被暂停了
+      var audioKey = entity.audioKey;
+      bool isPause = audioPlayerService.isPause(audioKey) == true;
+      var startFrame = entity.startFrame;
+      var endFrame = entity.endFrame;
+      //计算进度，恢复播放
+      if (isPause && frameIndex > startFrame && frameIndex < endFrame) {
+        double per = (frameIndex - startFrame) / (endFrame - startFrame);
+        int seek = (entity.totalTime * per).round();
+        var positon = Duration(milliseconds: seek);
+        audioPlayerService.playOnSeek(audioKey, positon);
       }
-      if (entity.endFrame <= frameIndex) {
+
+      if (startFrame == frameIndex) {
+        //开始播放对应音频
+        audioPlayerService.play(audioKey);
+      }
+      if (endFrame <= frameIndex) {
         //停止播放音频
-        var audioKey = entity.audioKey;
-        var player = videoItem.audioPlayerMap[audioKey];
-        player?.stop();
+        audioPlayerService.stop(audioKey);
       }
     });
   }
