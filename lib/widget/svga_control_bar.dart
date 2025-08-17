@@ -94,13 +94,7 @@ class _SvgaControlBarState extends State<SvgaControlBar> {
           const SizedBox(width: 32),
           IconButton(
             icon: Icon(
-              widget.model.isMuted
-                  ? Icons.volume_off
-                  : (widget.model.volume > 0.5
-                  ? Icons.volume_up
-                  : (widget.model.volume > 0
-                  ? Icons.volume_down
-                  : Icons.volume_mute)),
+              widget.model.isMuted ? Icons.volume_off : Icons.volume_up,
             ),
             onPressed: () {
               setState(() {

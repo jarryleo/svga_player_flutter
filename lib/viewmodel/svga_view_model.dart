@@ -47,12 +47,11 @@ class SvgaViewerModel extends ChangeNotifier {
 
   bool get isMuted => _isMuted;
 
-  double get actualVolume => _volume; // 实际存储的音量值（不受静音影响）
+  double get actualVolume => _volume;
 
   void changeVolume(double newVolume) {
     _volume = newVolume;
-    // 这里应该调用实际设置音量的方法
-    // 例如: animationController.setVolume(_volume);
+    _isMuted = (newVolume <= 0);
     notifyListeners();
   }
 

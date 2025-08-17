@@ -28,18 +28,17 @@ class AudioPlayerService {
   Future<void> play(String key) async {
     var handle = _soundHandle[key];
     if (handle != null) {
-      try {
-        await seek(key, Duration.zero);
-        await resume(key);
-        print("resume on play");
-      } catch (e) {
-        print(e);
-        await stop(key);
+      try{
+        if(_audioPlayer.getIsValidVoiceHandle(handle)){
+          await stop(key);
+        }
         var sound = _sourceMap[key];
         if (sound == null) {
           return;
         }
         _soundHandle[key] = await _audioPlayer.play(sound, volume: defVolume);
+      }catch (e) {
+        print(e);
       }
       return;
     }
@@ -92,6 +91,7 @@ class AudioPlayerService {
     if (handle == null) {
       return;
     }
+    print('stop play $key');
     _soundHandle.remove(key);
     await _audioPlayer.stop(handle);
   }
