@@ -1,7 +1,6 @@
 library svgaplayer_flutter_player;
 
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +14,7 @@ import 'sprite_info.dart';
 import 'svga_source.dart';
 
 part 'painter.dart';
+
 part 'simple_player.dart';
 
 class SVGAImage extends StatefulWidget {
@@ -173,6 +173,9 @@ class SVGAAnimationController extends AnimationController {
     for (var element in videoItem.bitmapCache.values) {
       size += estimateImageMemory(element);
     }
+    for (var element in videoItem.audioDataMap.values) {
+      size += element.length;
+    }
     for (var element in videoItem.dynamicItem.dynamicImages.values) {
       size += estimateImageMemory(element);
     }
@@ -197,6 +200,21 @@ class SVGAAnimationController extends AnimationController {
   void clear() {
     _canvasNeedsClear = true;
     if (!_isDisposed) notifyListeners();
+  }
+
+  /// 设置音量
+  void setVolume(double volume) {
+    _videoItem?.audioPlayerMap.values.forEach((player) {
+      player.setVolume(volume);
+    });
+  }
+
+  @override
+  void stop({bool canceled = true}) {
+    super.stop(canceled: canceled);
+    _videoItem?.audioPlayerMap.values.forEach((player) {
+      player.stop();
+    });
   }
 
   @override

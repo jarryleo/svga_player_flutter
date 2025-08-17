@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart' show decodeImageFromList;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' show get;
+import 'package:svga_viewer/svgaplayer/audio_player.dart';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'proto/svga.pbserver.dart';
@@ -86,18 +87,36 @@ class SVGAParser {
     if (images.isEmpty) return Future.value(movieItem);
     return Future.wait(images.entries.map((item) async {
       // result null means a decoding error occurred
-      final decodeImage = await _decodeImageItem(
-          item.key, Uint8List.fromList(item.value),
-          timeline: timeline);
-      if (decodeImage != null) {
-        movieItem.bitmapCache[item.key] = decodeImage;
-        movieItem.spriteInfoMap[item.key] = SpriteInfo(
-            name: item.key,
-            width: decodeImage.width,
-            height: decodeImage.height,
-            memory: estimateImageMemory(decodeImage));
+      var bytes = Uint8List.fromList(item.value);
+      if (_isAudioData(bytes)){
+        movieItem.audioDataMap[item.key] = bytes;
+        movieItem.audioPlayerMap[item.key] = await AudioPlayerService.init(bytes);
+      }else {
+        final decodeImage = await _decodeImageItem(
+            item.key, bytes,
+            timeline: timeline);
+        if (decodeImage != null) {
+          movieItem.bitmapCache[item.key] = decodeImage;
+          movieItem.spriteInfoMap[item.key] = SpriteInfo(
+              name: item.key,
+              width: decodeImage.width,
+              height: decodeImage.height,
+              memory: estimateImageMemory(decodeImage));
+        }
       }
     })).then((_) => movieItem);
+  }
+
+  bool _isAudioData(Uint8List bytes) {
+    //如果数据前3个byte是（73, 68, 51）则是MP3数据
+    //如果数据前3个byte是（-1, -5, -108）则是wav格式数据
+    if (bytes[0] == 73 && bytes[1] == 68 && bytes[2] == 51) {
+      return true;
+    }
+    if (bytes[0] == -1 && bytes[1] == -5 && bytes[2] == -108) {
+      return true;
+    }
+    return false;
   }
 
   Future<ui.Image?> _decodeImageItem(String key, Uint8List bytes,

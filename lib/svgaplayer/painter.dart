@@ -43,6 +43,7 @@ class _SVGAPainter extends CustomPainter {
     final params = videoItem.params;
     final Size viewBoxSize = Size(params.viewBoxWidth, params.viewBoxHeight);
     if (viewBoxSize.isEmpty) return;
+    playAudio();
     canvas.save();
     try {
       final canvasRect = Offset.zero & size;
@@ -52,6 +53,24 @@ class _SVGAPainter extends CustomPainter {
     } finally {
       canvas.restore();
     }
+  }
+
+  void playAudio() {
+    var frameIndex = currentFrame;
+    videoItem.audios.forEach((entity) {
+      if (entity.startFrame == frameIndex) {
+        //开始播放对应音频
+        var audioKey = entity.audioKey;
+        var player = videoItem.audioPlayerMap[audioKey];
+        player?.play();
+      }
+      if (entity.endFrame <= frameIndex) {
+        //停止播放音频
+        var audioKey = entity.audioKey;
+        var player = videoItem.audioPlayerMap[audioKey];
+        player?.stop();
+      }
+    });
   }
 
   void scaleCanvasToViewBox(Canvas canvas, Rect canvasRect, Rect viewBoxRect) {

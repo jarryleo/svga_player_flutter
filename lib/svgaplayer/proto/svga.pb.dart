@@ -10,6 +10,7 @@ import 'dart:core' show int, bool, double, String, List, Map, override;
 import 'dart:ui' as ui show Image, Path;
 
 import 'package:protobuf/protobuf.dart' as $pb;
+import 'package:svga_viewer/svgaplayer/audio_player.dart';
 
 import '../dynamic_entity.dart';
 import '../sprite_info.dart';
@@ -2162,8 +2163,8 @@ class MovieEntity extends $pb.GeneratedMessage {
       'Will be removed in next major version')
   MovieEntity clone() => MovieEntity()..mergeFromMessage(this);
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  @$core.Deprecated('Using this cafor (var player in audioPlayerMap.values) ry. '
+      'Use [GeneratedMesgeGenericExtensions.rebuild] instead. '
       'Will be removed in next major version')
   MovieEntity copyWith(void Function(MovieEntity) updates) =>
       super.copyWith((message) => updates(message as MovieEntity))
@@ -2227,6 +2228,8 @@ class MovieEntity extends $pb.GeneratedMessage {
   Map<String, ui.Image> bitmapCache = {};
   Map<String, ui.Path> pathCache = {};
   Map<String, SpriteInfo> spriteInfoMap = {};
+  Map<String, List<int>> audioDataMap = {};
+  Map<String, AudioPlayerService> audioPlayerMap = {};
   List<String> highlights = [];
   int fileSize = 0;
 
@@ -2236,5 +2239,10 @@ class MovieEntity extends $pb.GeneratedMessage {
     });
     bitmapCache.clear();
     pathCache.clear();
+    audioDataMap.clear();
+    audioPlayerMap.values.forEach((player) {
+      player.dispose();
+    });
+    audioPlayerMap.clear();
   }
 }
