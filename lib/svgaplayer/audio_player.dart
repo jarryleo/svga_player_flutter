@@ -6,7 +6,6 @@ class AudioPlayerService {
   final _audioPlayer = SoLoud.instance;
   final _sourceMap = <String, AudioSource>{};
   final _soundHandle = <String, SoundHandle>{};
-  double defVolume = 0.3;
 
   // 私有构造函数
   AudioPlayerService._();
@@ -16,7 +15,7 @@ class AudioPlayerService {
     final service = AudioPlayerService._();
     await service._audioPlayer.init();
     double volume = defaultVolume.clamp(0, 1);
-    service.defVolume = volume;
+    service._audioPlayer.setGlobalVolume(volume);
     return service;
   }
 
@@ -28,16 +27,16 @@ class AudioPlayerService {
   Future<void> play(String key) async {
     var handle = _soundHandle[key];
     if (handle != null) {
-      try{
-        if(_audioPlayer.getIsValidVoiceHandle(handle)){
+      try {
+        if (_audioPlayer.getIsValidVoiceHandle(handle)) {
           await stop(key);
         }
         var sound = _sourceMap[key];
         if (sound == null) {
           return;
         }
-        _soundHandle[key] = await _audioPlayer.play(sound, volume: defVolume);
-      }catch (e) {
+        _soundHandle[key] = await _audioPlayer.play(sound);
+      } catch (e) {
         print(e);
       }
       return;
@@ -47,7 +46,7 @@ class AudioPlayerService {
       return;
     }
     print("play $key");
-    _soundHandle[key] = await _audioPlayer.play(sound, volume: defVolume);
+    _soundHandle[key] = await _audioPlayer.play(sound);
   }
 
   bool isPause(String key) {
@@ -71,7 +70,7 @@ class AudioPlayerService {
         if (sound == null) {
           return;
         }
-        _soundHandle[key] = await _audioPlayer.play(sound, volume: defVolume);
+        _soundHandle[key] = await _audioPlayer.play(sound);
       });
     }
   }
@@ -147,7 +146,6 @@ class AudioPlayerService {
 
   Future<void> setAllVolume(double volume) async {
     double v = volume.clamp(0, 1);
-    defVolume = v;
     try {
       print('setAllVolume $v');
       _audioPlayer.setGlobalVolume(v);
