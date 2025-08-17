@@ -82,53 +82,56 @@ class _SvgaControlBarState extends State<SvgaControlBar> {
               builder: (context, child) {
                 var current = widget.animationController.currentFrame + 1;
                 var total = widget.animationController.frames;
-                var fps = widget.animationController.fps;
-                return Text(
-                  '$current/$total',
-                  style: GTextStyles.contentStyle,
+                return SizedBox(
+                  width: 60,
+                  child: Text(
+                    '$current/$total',
+                    style: GTextStyles.contentStyle,
+                    textAlign: TextAlign.right,
+                  ),
                 );
               }),
+          const SizedBox(width: 32),
+          IconButton(
+            icon: Icon(
+              widget.model.isMuted
+                  ? Icons.volume_off
+                  : (widget.model.volume > 0.5
+                  ? Icons.volume_up
+                  : (widget.model.volume > 0
+                  ? Icons.volume_down
+                  : Icons.volume_mute)),
+            ),
+            onPressed: () {
+              setState(() {
+                widget.model.toggleMute();
+                if (widget.model.isMuted) {
+                  widget.animationController.setVolume(0);
+                } else {
+                  widget.animationController.setVolume(widget.model.volume);
+                }
+              });
+            },
+          ),
+          SizedBox(
+            width: 100,
+            child: Slider(
+              value: widget.model.volume,
+              min: 0.0,
+              max: 1.0,
+              divisions: 100,
+              onChanged: (double value) {
+                setState(() {
+                  widget.model.changeVolume(value);
+                  widget.animationController.setVolume(value);
+                });
+              },
+            ),
+          ),
           const SizedBox(width: 16),
           const Spacer(),
           Row(
             children: [
-              IconButton(
-                icon: Icon(
-                  widget.model.isMuted
-                      ? Icons.volume_off
-                      : (widget.model.volume > 0.5
-                          ? Icons.volume_up
-                          : (widget.model.volume > 0
-                              ? Icons.volume_down
-                              : Icons.volume_mute)),
-                ),
-                onPressed: () {
-                  setState(() {
-                    widget.model.toggleMute();
-                    if (widget.model.isMuted) {
-                      widget.animationController.setVolume(0);
-                    } else {
-                      widget.animationController.setVolume(widget.model.volume);
-                    }
-                  });
-                },
-              ),
-              SizedBox(
-                width: 100,
-                child: Slider(
-                  value: widget.model.volume,
-                  min: 0.0,
-                  max: 1.0,
-                  divisions: 100,
-                  onChanged: (double value) {
-                    setState(() {
-                      widget.model.changeVolume(value);
-                      widget.animationController.setVolume(value);
-                    });
-                  },
-                ),
-              ),
-              const SizedBox(width: 16),
               //工作区颜色选择
               SizedBox(
                 width: 150,

@@ -50,28 +50,27 @@ class _TopBarWidgetState extends State<TopBarWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Overflow:'),
-                const SizedBox(width: 8),
                 Theme(
                   data: Theme.of(context).copyWith(
                     switchTheme: SwitchThemeData(
-                      thumbColor: MaterialStateProperty.resolveWith<Color?>(
-                            (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.selected)) {
+                      thumbColor: WidgetStateProperty.resolveWith<Color?>(
+                            (Set<WidgetState> states) {
+                          if (states.contains(WidgetState.selected)) {
                             return GColors.mainColor; // 选中时的拇指颜色
                           }
                           return Colors.grey; // 未选中时的拇指颜色
                         },
                       ),
-                      trackColor: MaterialStateProperty.resolveWith<Color?>(
-                            (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.selected)) {
-                            return GColors.mainColor.withOpacity(0.3); // 选中时的轨道颜色
+                      trackColor: WidgetStateProperty.resolveWith<Color?>(
+                            (Set<WidgetState> states) {
+                          if (states.contains(WidgetState.selected)) {
+                            return GColors.mainColor.withValues(alpha: 0.3); // 选中时的轨道颜色
                           }
-                          return Colors.grey.withOpacity(0.3); // 未选中时的轨道颜色
+                          return Colors.grey.withValues(alpha: 0.3); // 未选中时的轨道颜色
                         },
                       ),
-                      overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                            (Set<MaterialState> states) {
+                      overlayColor: WidgetStateProperty.resolveWith<Color?>(
+                            (Set<WidgetState> states) {
                           return Colors.transparent; // 禁用点击波纹效果
                         },
                       ),

@@ -5,7 +5,7 @@ class GColors {
   static const Color bodyBg = Color(0xFFF5F7FA);
 
   ///主要颜色
-  static const Color mainColor = Color(0xFFFF5CA1);
+  static const Color mainColor = Color(0xFFB88CFF);
 
   ///主要文本颜色
   static const Color mainText = Color(0xFF333333);
