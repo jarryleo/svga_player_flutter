@@ -40,6 +40,27 @@ class SvgaViewerModel extends ChangeNotifier {
 
   BoxFit get boxFit => _boxFit;
 
+  double _volume = 0.3;
+  bool _isMuted = false;
+
+  double get volume => _isMuted ? 0.0 : _volume;
+
+  bool get isMuted => _isMuted;
+
+  double get actualVolume => _volume; // 实际存储的音量值（不受静音影响）
+
+  void changeVolume(double newVolume) {
+    _volume = newVolume;
+    // 这里应该调用实际设置音量的方法
+    // 例如: animationController.setVolume(_volume);
+    notifyListeners();
+  }
+
+  void toggleMute() {
+    _isMuted = !_isMuted;
+    notifyListeners();
+  }
+
   void changeBackgroundColor(Color color) {
     _backgroundColor = color;
     notifyListeners();

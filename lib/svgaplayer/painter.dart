@@ -81,6 +81,7 @@ class _SVGAPainter extends CustomPainter {
         int seek = (entity.totalTime * per).round();
         var positon = Duration(milliseconds: seek);
         audioPlayerService.playOnSeek(audioKey, positon);
+        return;
       }
 
       if (startFrame == frameIndex) {

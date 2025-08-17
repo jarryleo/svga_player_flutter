@@ -180,6 +180,10 @@ class SVGAAnimationController extends AnimationController {
     return size;
   }
 
+  double getVolume() {
+    return videoItem?.audioPlayerService?.getAllVolume() ?? 0.3;
+  }
+
   ///获取精灵名称列表
   List<String> get spriteKeys {
     final videoItem = _videoItem;

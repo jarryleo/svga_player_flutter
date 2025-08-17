@@ -2234,7 +2234,7 @@ class MovieEntity extends $pb.GeneratedMessage {
   int audioMemery = 0;
 
   $core.Future<AudioPlayerService?> getAudioPlayer() async{
-    audioPlayerService ??= await AudioPlayerService.init();
+    audioPlayerService ??= await AudioPlayerService.init(defaultVolume: 0.3);
     return audioPlayerService;
   }
 

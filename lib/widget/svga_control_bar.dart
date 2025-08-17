@@ -84,7 +84,7 @@ class _SvgaControlBarState extends State<SvgaControlBar> {
                 var total = widget.animationController.frames;
                 var fps = widget.animationController.fps;
                 return Text(
-                  '$current/$total (FPS:$fps)',
+                  '$current/$total',
                   style: GTextStyles.contentStyle,
                 );
               }),
@@ -92,49 +92,43 @@ class _SvgaControlBarState extends State<SvgaControlBar> {
           const Spacer(),
           Row(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Overflow:'),
-                  const SizedBox(width: 8),
-                  Switch(
-                    value: widget.model.allowOverflow,
-                    onChanged: (v) {
-                      setState(() {
-                        widget.model.changeAllowOverflow(v);
-                      });
-                    },
-                  )
-                ],
+              IconButton(
+                icon: Icon(
+                  widget.model.isMuted
+                      ? Icons.volume_off
+                      : (widget.model.volume > 0.5
+                          ? Icons.volume_up
+                          : (widget.model.volume > 0
+                              ? Icons.volume_down
+                              : Icons.volume_mute)),
+                ),
+                onPressed: () {
+                  setState(() {
+                    widget.model.toggleMute();
+                    if (widget.model.isMuted) {
+                      widget.animationController.setVolume(0);
+                    } else {
+                      widget.animationController.setVolume(widget.model.volume);
+                    }
+                  });
+                },
               ),
-              const SizedBox(width: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Box fit:'),
-                  const SizedBox(width: 8),
-                  DropdownButton<BoxFit>(
-                    focusColor: Colors.transparent,
-                    style: GTextStyles.valueStyle,
-                    value: widget.model.boxFit,
-                    onChanged: (BoxFit? newValue) {
-                      setState(() {
-                        widget.model.changeBoxFit(newValue!);
-                      });
-                    },
-                    items: BoxFit.values.map((BoxFit value) {
-                      return DropdownMenuItem(
-                        value: value,
-                        child: Text(
-                          value.toString().split('.').last,
-                          style: GTextStyles.valueStyle,
-                        ),
-                      );
-                    }).toList(),
-                  )
-                ],
+              SizedBox(
+                width: 100,
+                child: Slider(
+                  value: widget.model.volume,
+                  min: 0.0,
+                  max: 1.0,
+                  divisions: 100,
+                  onChanged: (double value) {
+                    setState(() {
+                      widget.model.changeVolume(value);
+                      widget.animationController.setVolume(value);
+                    });
+                  },
+                ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 16),
               //工作区颜色选择
               SizedBox(
                 width: 150,

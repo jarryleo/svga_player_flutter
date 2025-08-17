@@ -2,6 +2,7 @@ import 'package:svga_viewer/theme/text_styles.dart';
 
 import '../includes.dart';
 import '../svgaplayer/svga_source.dart';
+import '../theme/g_colors.dart';
 import '../viewmodel/svga_view_model.dart';
 
 class TopBarWidget extends StatefulWidget {
@@ -44,6 +45,81 @@ class _TopBarWidgetState extends State<TopBarWidget> {
               style: GTextStyles.titleStyle,
             ),
             const Spacer(),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Overflow:'),
+                const SizedBox(width: 8),
+                Theme(
+                  data: Theme.of(context).copyWith(
+                    switchTheme: SwitchThemeData(
+                      thumbColor: MaterialStateProperty.resolveWith<Color?>(
+                            (Set<MaterialState> states) {
+                          if (states.contains(MaterialState.selected)) {
+                            return GColors.mainColor; // 选中时的拇指颜色
+                          }
+                          return Colors.grey; // 未选中时的拇指颜色
+                        },
+                      ),
+                      trackColor: MaterialStateProperty.resolveWith<Color?>(
+                            (Set<MaterialState> states) {
+                          if (states.contains(MaterialState.selected)) {
+                            return GColors.mainColor.withOpacity(0.3); // 选中时的轨道颜色
+                          }
+                          return Colors.grey.withOpacity(0.3); // 未选中时的轨道颜色
+                        },
+                      ),
+                      overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                            (Set<MaterialState> states) {
+                          return Colors.transparent; // 禁用点击波纹效果
+                        },
+                      ),
+                    ),
+                  ),
+                  child: Transform.scale(
+                    scale: 0.7, // 缩小 Switch 尺寸
+                    child: Switch(
+                      value: widget.model.allowOverflow,
+                      onChanged: (v) {
+                        setState(() {
+                          widget.model.changeAllowOverflow(v);
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(width: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Box fit:'),
+                const SizedBox(width: 8),
+                DropdownButton<BoxFit>(
+                  focusColor: Colors.transparent,
+                  style: GTextStyles.valueStyle,
+                  value: widget.model.boxFit,
+                  onChanged: (BoxFit? newValue) {
+                    setState(() {
+                      widget.model.changeBoxFit(newValue!);
+                    });
+                  },
+                  items: BoxFit.values.map((BoxFit value) {
+                    return DropdownMenuItem(
+                      value: value,
+                      child: Text(
+                        value.toString().split('.').last,
+                        style: GTextStyles.valueStyle,
+                      ),
+                    );
+                  }).toList(),
+                )
+              ],
+            ),
+            const SizedBox(width: 16),
+
             Row(children: [
               IconButton(
                   onPressed: () {

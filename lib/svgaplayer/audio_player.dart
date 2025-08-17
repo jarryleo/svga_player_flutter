@@ -6,14 +6,17 @@ class AudioPlayerService {
   final _audioPlayer = SoLoud.instance;
   final _sourceMap = <String, AudioSource>{};
   final _soundHandle = <String, SoundHandle>{};
+  double defVolume = 0.3;
 
   // 私有构造函数
   AudioPlayerService._();
 
   // 工厂方法，用于创建 AudioPlayerService 实例并设置音频数据
-  static Future<AudioPlayerService> init() async {
+  static Future<AudioPlayerService> init({double defaultVolume = 0.3}) async {
     final service = AudioPlayerService._();
     await service._audioPlayer.init();
+    double volume = defaultVolume.clamp(0, 1);
+    service.defVolume = volume;
     return service;
   }
 
@@ -36,7 +39,7 @@ class AudioPlayerService {
         if (sound == null) {
           return;
         }
-        _soundHandle[key] = await _audioPlayer.play(sound);
+        _soundHandle[key] = await _audioPlayer.play(sound, volume: defVolume);
       }
       return;
     }
@@ -45,7 +48,7 @@ class AudioPlayerService {
       return;
     }
     print("play $key");
-    _soundHandle[key] = await _audioPlayer.play(sound);
+    _soundHandle[key] = await _audioPlayer.play(sound, volume: defVolume);
   }
 
   bool isPause(String key) {
@@ -69,7 +72,7 @@ class AudioPlayerService {
         if (sound == null) {
           return;
         }
-        _soundHandle[key] = await _audioPlayer.play(sound);
+        _soundHandle[key] = await _audioPlayer.play(sound, volume: defVolume);
       });
     }
   }
@@ -138,11 +141,23 @@ class AudioPlayerService {
     if (handle == null) {
       return;
     }
-    _audioPlayer.setVolume(handle, volume);
+    double v = volume.clamp(0, 1);
+    _audioPlayer.setVolume(handle, v);
   }
 
   Future<void> setAllVolume(double volume) async {
-    _audioPlayer.setGlobalVolume(volume);
+    double v = volume.clamp(0, 1);
+    defVolume = v;
+    try {
+      print('setAllVolume $v');
+      _audioPlayer.setGlobalVolume(v);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  double getAllVolume() {
+    return _audioPlayer.getGlobalVolume();
   }
 
   // 停止播放并释放资源

@@ -115,7 +115,6 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -227,7 +226,8 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
               animationController?.load(widget.source, onSuccess: (e) {
                 setState(() {
                   model.changeIsLoading(false);
-                  model.setSize(animationController!.width, animationController!.height);
+                  model.setSize(
+                      animationController!.width, animationController!.height);
                   _isLoaded = true;
                   _isError = false;
                 });
