@@ -30,16 +30,20 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # svga 必须依赖
   protobuf: ^2.0.0
   http: ^1.0.0
+  flutter_soloud: ^3.2.5
+  path_provider: ^2.1.5
   path_drawing: ^1.0.1
   archive: ^3.1.2
+  # 平台依赖
   window_manager: ^0.3.0
   desktop_drop: ^0.6.1
   file_picker: ^8.3.0
-  dotted_border: ^2.1.0
+  dotted_border: ^2.1.0 #虚线框
   args: ^2.7.0
-  flutter_soloud: ^3.2.5
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -80,7 +80,7 @@ class AudioPlayerService {
       seek(key, position).then((_) {
         resume(key);
       });
-      print("playOnSeek");
+      print("playOnSeek: $position");
     } catch (e) {
       print(e);
       stop(key).then((_) async {

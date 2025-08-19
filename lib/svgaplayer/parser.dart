@@ -9,6 +9,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' show get;
 
 // ignore: import_of_legacy_library_into_null_safe
+import 'cache/http_cache_manager.dart';
 import 'proto/svga.pbserver.dart';
 import 'sprite_info.dart';
 import 'utils.dart';
@@ -23,8 +24,8 @@ class SVGAParser {
 
   /// Download animation file from remote server, and decode it.
   Future<MovieEntity> decodeFromURL(String url) async {
-    final response = await get(Uri.parse(url));
-    return decodeFromBuffer(response.bodyBytes);
+    final bytes = await HttpCacheManager().getData(url);
+    return decodeFromBuffer(bytes);
   }
 
   /// Download animation file from bundle assets, and decode it.
