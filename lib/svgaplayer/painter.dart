@@ -70,25 +70,34 @@ class _SVGAPainter extends CustomPainter {
     }
     var frameIndex = currentFrame;
     videoItem.audios.forEach((entity) {
-      //如果被暂停了
       var audioKey = entity.audioKey;
-      bool isPause = audioPlayerService.isPause(audioKey) == true;
-      var startFrame = entity.startFrame.clamp(2, controller.frames); //fix 刚启动第一帧可能是2，导致没有声音问题
+      var startFrame = entity.startFrame;
       var endFrame = entity.endFrame;
-      print('playAudio currentFrame = $currentFrame, startFrame = $startFrame, endFrame = $endFrame');
-      //计算进度，恢复播放
-      if (isPause && frameIndex > startFrame && frameIndex < endFrame) {
+      //计算进度
+      if (frameIndex >= startFrame && frameIndex < endFrame) {
         double per = (frameIndex - startFrame) / (endFrame - startFrame);
         int seek = (entity.totalTime * per).round();
         var positon = Duration(milliseconds: seek);
-        audioPlayerService.playOnSeek(audioKey, positon);
-        return;
+        bool isPause = audioPlayerService.isPause(audioKey);
+        //如果是暂停则恢复播放
+        if (isPause) {
+          audioPlayerService.playOnSeek(audioKey, positon);
+          return;
+        }
+        //如果是播放中，则计算误差
+        bool isPlaying = audioPlayerService.isPlaying(audioKey);
+        if (isPlaying) {
+          var playPosition = audioPlayerService.getPosition(audioKey);
+          if ((playPosition - positon).abs() >
+              const Duration(milliseconds: 1000)) {
+            audioPlayerService.playOnSeek(audioKey, positon);
+          }
+        } else {
+          //开始播放对应音频
+          audioPlayerService.play(audioKey);
+        }
       }
 
-      if (startFrame == frameIndex) {
-        //开始播放对应音频
-        audioPlayerService.play(audioKey);
-      }
       if (endFrame <= frameIndex) {
         //停止播放音频
         audioPlayerService.stop(audioKey);

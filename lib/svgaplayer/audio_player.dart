@@ -35,6 +35,7 @@ class AudioPlayerService {
         if (sound == null) {
           return;
         }
+        print("replay $key");
         _soundHandle[key] = await _audioPlayer.play(sound);
       } catch (e) {
         print(e);
@@ -49,12 +50,29 @@ class AudioPlayerService {
     _soundHandle[key] = await _audioPlayer.play(sound);
   }
 
+  bool isPlaying(String key) {
+    var handle = _soundHandle[key];
+    if (handle == null) {
+      return false;
+    }
+    return _audioPlayer.getIsValidVoiceHandle(handle) &&
+        _audioPlayer.getPause(handle) == false;
+  }
+
   bool isPause(String key) {
     var handle = _soundHandle[key];
     if (handle == null) {
       return false;
     }
     return _audioPlayer.getPause(handle) == true;
+  }
+
+  Duration getPosition(String key) {
+    var handle = _soundHandle[key];
+    if (handle == null) {
+      return Duration.zero;
+    }
+    return _audioPlayer.getPosition(handle);
   }
 
   void playOnSeek(String key, Duration position) {
@@ -147,7 +165,6 @@ class AudioPlayerService {
   Future<void> setAllVolume(double volume) async {
     double v = volume.clamp(0, 1);
     try {
-      print('setAllVolume $v');
       _audioPlayer.setGlobalVolume(v);
     } catch (e) {
       print(e);
