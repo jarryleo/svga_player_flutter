@@ -2163,7 +2163,8 @@ class MovieEntity extends $pb.GeneratedMessage {
       'Will be removed in next major version')
   MovieEntity clone() => MovieEntity()..mergeFromMessage(this);
 
-  @$core.Deprecated('Using this cafor (var player in audioPlayerMap.values) ry. '
+  @$core.Deprecated(
+      'Using this cafor (var player in audioPlayerMap.values) ry. '
       'Use [GeneratedMesgeGenericExtensions.rebuild] instead. '
       'Will be removed in next major version')
   MovieEntity copyWith(void Function(MovieEntity) updates) =>
@@ -2223,7 +2224,8 @@ class MovieEntity extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.List<AudioEntity> get audios => $_getList(4);
 
-  bool autorelease = true;
+  bool autorelease = true; //是否自动释放
+  bool isRelease = false; //是否已经释放
   SVGADynamicEntity dynamicItem = SVGADynamicEntity();
   Map<String, ui.Image> bitmapCache = {};
   Map<String, ui.Path> pathCache = {};
@@ -2233,17 +2235,21 @@ class MovieEntity extends $pb.GeneratedMessage {
   int fileSize = 0;
   int audioMemery = 0;
 
-  $core.Future<AudioPlayerService?> getAudioPlayer() async{
+  $core.Future<AudioPlayerService?> getAudioPlayer() async {
     audioPlayerService ??= await AudioPlayerService.init(defaultVolume: 0.3);
     return audioPlayerService;
   }
 
+  ///释放动画资源
   void dispose() {
+    isRelease = true;
     bitmapCache.values.forEach((element) {
       element.dispose();
     });
     bitmapCache.clear();
     pathCache.clear();
+    spriteInfoMap.clear();
+    dynamicItem.reset();
     audioPlayerService?.disposeAll();
   }
 }

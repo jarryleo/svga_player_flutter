@@ -24,7 +24,7 @@ class SVGAParser {
 
   /// Download animation file from remote server, and decode it.
   Future<MovieEntity> decodeFromURL(String url) async {
-    final bytes = await HttpCacheManager().getData(url);
+    final bytes = await SvgaHttpCacheManager.instance.getData(url);
     return decodeFromBuffer(bytes);
   }
 
@@ -50,6 +50,7 @@ class SVGAParser {
       timeline.instant('MovieEntity.fromBuffer()',
           arguments: {'inflatedLength': inflatedBytes.length});
     }
+    ///解析数据生产动画对象
     final movie = MovieEntity.fromBuffer(inflatedBytes);
     movie.fileSize = bytes.length;
     if (timeline != null) {

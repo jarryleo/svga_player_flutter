@@ -6,12 +6,14 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
-class HttpCacheManager {
-  static final HttpCacheManager _instance = HttpCacheManager._internal();
+class SvgaHttpCacheManager {
+  static final SvgaHttpCacheManager _instance = SvgaHttpCacheManager._internal();
 
-  factory HttpCacheManager() => _instance;
+  factory SvgaHttpCacheManager() => _instance;
 
-  HttpCacheManager._internal();
+  SvgaHttpCacheManager._internal();
+
+  static final instance = _instance;
 
   // 添加最大缓存大小限制（字节），默认200MB
   int _maxCacheSize = 200 * 1024 * 1024;

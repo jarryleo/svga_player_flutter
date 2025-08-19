@@ -67,11 +67,14 @@ class SVGAAnimationController extends AnimationController {
     required TickerProvider vsync,
   }) : super(vsync: vsync, duration: Duration.zero);
 
-  void load(SVGASource source,
-      {Function(MovieEntity)? onSuccess,
-      Function(Object)? onError,
-      bool autoPlay = true}) {
-    loadVideoItem(source).then((value) {
+  void load(
+    SVGASource source, {
+    Function(MovieEntity)? onSuccess,
+    Function(Object)? onError,
+    bool useMemoryCache = true,
+    bool autoPlay = true,
+  }) {
+    source.loadVideoItem(userMemoryCache: useMemoryCache).then((value) {
       videoItem = value;
       if (autoPlay) {
         repeat();
@@ -275,6 +278,9 @@ class _SVGAImageState extends State<SVGAImage> {
 
   @override
   void dispose() {
+    if(video?.autorelease == true){
+      video?.dispose();
+    }
     video = null;
     widget._controller.removeListener(_handleChange);
     widget._controller.removeStatusListener(_handleStatusChange);

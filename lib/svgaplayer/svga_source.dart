@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:svga_viewer/svgaplayer/proto/svga.pb.dart';
+
+import 'cache/memory_cache.dart';
 import 'parser.dart';
 
 /// SVGA 数据源类型枚举
@@ -43,14 +46,32 @@ class SVGASource {
   String toString() {
     return 'name: $name, type: ${type.name}, source: $source';
   }
-}
 
-Future loadVideoItem(SVGASource source) {
-  if (source.type == SVGASourceType.file) {
-    return SVGAParser.shared.decodeFromFile(File(source.source));
-  } else if (source.type == SVGASourceType.asset) {
-    return SVGAParser.shared.decodeFromAssets(source.source);
-  } else {
-    return SVGAParser.shared.decodeFromURL(source.source);
+  ///加载SVGA资源
+  Future loadVideoItem({bool userMemoryCache = true}) async {
+    if(userMemoryCache) {
+      var cacheKey = toString();
+      var cache = MovieEntityCache.instance.get(cacheKey);
+      if (cache?.isRelease == false) {
+        print('use memory cache : $cacheKey');
+        return cache;
+      } else {
+        MovieEntityCache.instance.remove(cacheKey);
+      }
+    }
+    MovieEntity? movie;
+    if (type == SVGASourceType.file) {
+      movie = await SVGAParser.shared.decodeFromFile(File(source));
+    } else if (type == SVGASourceType.asset) {
+      movie = await SVGAParser.shared.decodeFromAssets(source);
+    } else {
+      movie = await SVGAParser.shared.decodeFromURL(source);
+    }
+    if (userMemoryCache) {
+      movie.autorelease = false;
+      var cacheKey = toString();
+      MovieEntityCache.instance.put(cacheKey, movie);
+    }
+    return movie;
   }
 }
