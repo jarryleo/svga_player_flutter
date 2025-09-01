@@ -311,8 +311,14 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
                   var imageUrl = spriteInfo.imagePath ?? "";
                   if (imageUrl.isNotEmpty) {
                     var tans = spriteInfo.imageTransformation;
-                    dynamicItem.setImageWithUrl(imageUrl, key,
-                        transformation: tans);
+                    //判断是否是url
+                    if (imageUrl.startsWith('http')) {
+                      dynamicItem.setImageWithUrl(imageUrl, key,
+                          transformation: tans);
+                    }else{
+                      dynamicItem.setImageWithAssert(imageUrl, key,
+                          transformation: tans);
+                    }
                   }
                   //设置文本
                   var string = spriteInfo.text ?? "";

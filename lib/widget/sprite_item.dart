@@ -34,7 +34,12 @@ class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
   final TextEditingController _textController = TextEditingController();
 
   // 图片相关控制器和变量
-  final TextEditingController _imageUrlController = TextEditingController();
+  TextEditingController _imageUrlController = TextEditingController();
+
+  // 预设图片
+  final List<String> _imagePathOptions = [
+    'assets/icon/ic_app.png',
+  ];
 
   //图片裁剪 'Original', 'Circle'
   final Map<String, ImageTransformation?> imageTransformations = {
@@ -110,9 +115,9 @@ class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
                               color: color,
                               child: widget.spriteInfo.textColor == color
                                   ? Icon(Icons.check,
-                                  color: color.computeLuminance() > 0.5
-                                      ? Colors.black
-                                      : Colors.white)
+                                      color: color.computeLuminance() > 0.5
+                                          ? Colors.black
+                                          : Colors.white)
                                   : null,
                             ),
                           );
@@ -160,8 +165,6 @@ class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
       },
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -242,19 +245,45 @@ class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
                     const SizedBox(width: 10),
                     Expanded(
                       child: SizedBox(
-                        height: 42.0, // 设置您需要的固定高度
-                        child: TextField(
-                          controller: _imageUrlController,
-                          style: GTextStyles.valueStyle,
-                          onChanged: (text) {
-                            setState(() {
-                              widget.spriteInfo.imagePath = text;
+                        height: 42.0,
+                        child: Autocomplete<String>(
+                          optionsBuilder: (TextEditingValue textEditingValue) {
+                            if (textEditingValue.text.isEmpty) {
+                              return _imagePathOptions;
+                            }
+                            return _imagePathOptions.where((String option) {
+                              return option.contains(
+                                  textEditingValue.text.toLowerCase());
                             });
                           },
-                          decoration: const InputDecoration(
-                            hintText: 'input image url here',
-                            border: OutlineInputBorder(),
-                          ),
+                          onSelected: (String selection) {
+                            setState(() {
+                              _imageUrlController.text = selection;
+                              widget.spriteInfo.imagePath = selection;
+                            });
+                          },
+                          fieldViewBuilder: (
+                            BuildContext context,
+                            TextEditingController textEditingController,
+                            FocusNode focusNode,
+                            VoidCallback onFieldSubmitted,
+                          ) {
+                            _imageUrlController = textEditingController;
+                            return TextField(
+                              controller: textEditingController,
+                              focusNode: focusNode,
+                              style: GTextStyles.valueStyle,
+                              onChanged: (text) {
+                                setState(() {
+                                  widget.spriteInfo.imagePath = text;
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                hintText: 'input image url here',
+                                border: OutlineInputBorder(),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
