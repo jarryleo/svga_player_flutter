@@ -217,11 +217,17 @@ class _AnimatedSpriteItemState extends State<AnimatedSpriteItem>
             }
           }
         },
-        onExit: (_) {
-          setState(() {
-            _isHovered = false;
-          });
-          _controller.reverse();
+        onExit: (event) {
+          final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
+          if (renderBox != null) {
+            final position = event.localPosition;
+            if (!renderBox.size.contains(position)) {
+              setState(() {
+                _isHovered = false;
+              });
+              _controller.reverse();
+            }
+          }
         },
         child: SlideTransition(
           position: _offsetAnimation,
