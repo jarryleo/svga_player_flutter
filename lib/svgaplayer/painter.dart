@@ -6,6 +6,7 @@ class _SVGAPainter extends CustomPainter {
 
   int get currentFrame => controller.currentFrame;
   int lastFrame = -1;
+  int marqueeFrame = 0;
 
   MovieEntity get videoItem => controller.videoItem!;
   final FilterQuality filterQuality;
@@ -509,7 +510,7 @@ class _SVGAPainter extends CustomPainter {
       canvas.save();
 
       // 裁剪到frameRect范围内，确保文本不会在指定区域外显示
-      if (clipRect) canvas.clipRect(frameRect);
+      canvas.clipRect(frameRect);
 
       double textWidth = textPainter.width;
       double containerWidth = frameRect.width;
@@ -530,21 +531,21 @@ class _SVGAPainter extends CustomPainter {
       } else if (isSingleLine) {
         // 单行文本且宽度超过容器宽度，应用跑马灯效果
         // 跑马灯配置参数
-        var scrollSpeed = 50.0; // 每秒滚动50像素
+        var scrollSpeed = 20.0; // 每秒滚动像素
         var pauseAtEnd = true; // 是否在末尾暂停
-        var delaySeconds = 1.0; // 延迟1秒开始滚动
+        var delaySeconds = 2.0; // 延迟1秒开始滚动
 
         // 实现跑马灯效果
-        double totalDistance = textWidth + containerWidth;
+        double totalDistance = textWidth + 40.0;
 
         // 获取每秒帧数(FPS)
-        int fps = videoItem.params.fps > 0 ? videoItem.params.fps : 30; // 默认30FPS
+        int fps = videoItem.params.fps > 0 ? videoItem.params.fps : 20;
 
         // 计算延迟帧数（基于1秒延迟）
         int delayFrames = (fps * delaySeconds).round();
 
         // 考虑延迟帧
-        int effectiveFrame = currentFrame > delayFrames ? currentFrame - delayFrames : 0;
+        int effectiveFrame = marqueeFrame > delayFrames ? marqueeFrame - delayFrames : 0;
 
         // 基于时间计算偏移量，而不是帧数
         // 计算当前时间(秒)
@@ -556,7 +557,7 @@ class _SVGAPainter extends CustomPainter {
         if (pauseAtEnd) {
           // 计算一个完整滚动周期需要的时间
           double cycleTime = totalDistance / scrollSpeed; // 完成一次滚动需要的时间(秒)
-          double pauseTime = 1.0; // 暂停1秒
+          double pauseTime = delaySeconds; // 暂停时间
 
           // 计算总周期时间
           double fullCycleTime = cycleTime + pauseTime;
@@ -567,9 +568,11 @@ class _SVGAPainter extends CustomPainter {
           if (cyclePosition < cycleTime) {
             // 滚动阶段
             offset = -cyclePosition * scrollSpeed;
+            marqueeFrame ++;
           } else {
             // 暂停阶段
-            offset = -(totalDistance - containerWidth);
+            offset = 0;
+            marqueeFrame = 0;
           }
         } else {
           // 连续滚动，使用模运算实现循环
