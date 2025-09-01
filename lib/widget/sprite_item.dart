@@ -110,9 +110,9 @@ class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
                               color: color,
                               child: widget.spriteInfo.textColor == color
                                   ? Icon(Icons.check,
-                                      color: color.computeLuminance() > 0.5
-                                          ? Colors.black
-                                          : Colors.white)
+                                  color: color.computeLuminance() > 0.5
+                                      ? Colors.black
+                                      : Colors.white)
                                   : null,
                             ),
                           );
@@ -121,36 +121,25 @@ class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
                     ),
                     const SizedBox(height: 20),
                     const Text('Font Size:'),
-                    SizedBox(
-                      height: 50,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: _sizeOptions.map((size) {
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                widget.spriteInfo.textSize = size;
-                              });
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.all(4),
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8),
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: widget.spriteInfo.textSize == size
-                                        ? Colors.blue
-                                        : Colors.grey),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Text(
-                                size.toString(),
-                                style: TextStyle(fontSize: size),
-                              ),
-                            ),
-                          );
-                        }).toList(),
+                    Slider(
+                      value: widget.spriteInfo.textSize?.toDouble() ?? 16.0,
+                      min: 5.0,
+                      max: 100.0,
+                      divisions: 95,
+                      label: '${widget.spriteInfo.textSize?.toInt() ?? 16}',
+                      onChanged: (double value) {
+                        setState(() {
+                          widget.spriteInfo.textSize = value;
+                        });
+                      },
+                    ),
+                    Center(
+                      child: Text(
+                        '文字',
+                        style: TextStyle(
+                          fontSize: widget.spriteInfo.textSize ?? 16.0,
+                          color: widget.spriteInfo.textColor ?? Colors.black,
+                        ),
                       ),
                     ),
                   ],
@@ -160,6 +149,7 @@ class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
+                    widget.onApplyPressed?.call();
                   },
                   child: const Text('OK'),
                 ),
@@ -170,6 +160,8 @@ class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
       },
     );
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -285,6 +277,7 @@ class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
                             _selectedShape = newValue;
                             widget.spriteInfo.imageTransformation =
                                 imageTransformations[newValue];
+                            widget.onApplyPressed?.call();
                           });
                         }
                       },

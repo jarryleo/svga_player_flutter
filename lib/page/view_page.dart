@@ -326,7 +326,6 @@ class _SVGAViewerPageState extends State<SVGAViewerPage>
                           style: TextStyle(
                             fontSize: fontSize,
                             color: textColor,
-                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
