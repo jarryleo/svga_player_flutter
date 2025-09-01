@@ -504,14 +504,92 @@ class _SVGAPainter extends CustomPainter {
 
     TextPainter? textPainter = dynamicText[imageKey];
 
-    textPainter?.paint(
-      canvas,
-      Offset(
-        (frameRect.width - textPainter.width) / 2.0,
-        (frameRect.height - textPainter.height) / 2.0,
-      ),
-    );
+    if (textPainter != null) {
+      // 保存当前画布状态
+      canvas.save();
+
+      // 裁剪到frameRect范围内，确保文本不会在指定区域外显示
+      if (clipRect) canvas.clipRect(frameRect);
+
+      double textWidth = textPainter.width;
+      double containerWidth = frameRect.width;
+      double containerHeight = frameRect.height;
+
+      // 判断是否为单行文本
+      bool isSingleLine = textPainter.computeLineMetrics().length <= 1;
+
+      if (!isSingleLine || textWidth <= containerWidth) {
+        // 多行文本或单行但文本宽度小于容器宽度，居中显示
+        textPainter.paint(
+          canvas,
+          Offset(
+            frameRect.left + (containerWidth - textWidth) / 2.0,
+            frameRect.top + (containerHeight - textPainter.height) / 2.0,
+          ),
+        );
+      } else if (isSingleLine) {
+        // 单行文本且宽度超过容器宽度，应用跑马灯效果
+        // 跑马灯配置参数
+        var scrollSpeed = 50.0; // 每秒滚动50像素
+        var pauseAtEnd = true; // 是否在末尾暂停
+        var delaySeconds = 1.0; // 延迟1秒开始滚动
+
+        // 实现跑马灯效果
+        double totalDistance = textWidth + containerWidth;
+
+        // 获取每秒帧数(FPS)
+        int fps = videoItem.params.fps > 0 ? videoItem.params.fps : 30; // 默认30FPS
+
+        // 计算延迟帧数（基于1秒延迟）
+        int delayFrames = (fps * delaySeconds).round();
+
+        // 考虑延迟帧
+        int effectiveFrame = currentFrame > delayFrames ? currentFrame - delayFrames : 0;
+
+        // 基于时间计算偏移量，而不是帧数
+        // 计算当前时间(秒)
+        double currentTime = effectiveFrame / fps;
+
+        // 计算偏移量(像素)
+        double offset = -(currentTime * scrollSpeed);
+
+        if (pauseAtEnd) {
+          // 计算一个完整滚动周期需要的时间
+          double cycleTime = totalDistance / scrollSpeed; // 完成一次滚动需要的时间(秒)
+          double pauseTime = 1.0; // 暂停1秒
+
+          // 计算总周期时间
+          double fullCycleTime = cycleTime + pauseTime;
+
+          // 计算当前处于周期中的哪个阶段
+          double cyclePosition = currentTime % fullCycleTime;
+
+          if (cyclePosition < cycleTime) {
+            // 滚动阶段
+            offset = -cyclePosition * scrollSpeed;
+          } else {
+            // 暂停阶段
+            offset = -(totalDistance - containerWidth);
+          }
+        } else {
+          // 连续滚动，使用模运算实现循环
+          offset = -(currentTime * scrollSpeed) % totalDistance;
+        }
+
+        // 应用垂直居中
+        double verticalOffset = frameRect.top + (containerHeight - textPainter.height) / 2.0;
+        double horizontalOffset = frameRect.left; // 从frameRect的左边开始
+
+        // 绘制文本实现无缝滚动
+        textPainter.paint(canvas, Offset(horizontalOffset + offset, verticalOffset));
+        textPainter.paint(canvas, Offset(horizontalOffset + offset + totalDistance, verticalOffset));
+      }
+
+      // 恢复画布状态，移除裁剪
+      canvas.restore();
+    }
   }
+
 
   @override
   bool shouldRepaint(_SVGAPainter oldDelegate) {
