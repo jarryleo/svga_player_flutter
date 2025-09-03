@@ -33,7 +33,7 @@ dependencies:
   # svga 必须依赖
   protobuf: ^2.0.0
   http: ^1.0.0
-  flutter_soloud: ^3.2.5
+  flutter_soloud: ^3.3.2
   path_provider: ^2.1.5
   path_drawing: ^1.0.1
   archive: ^3.1.2
