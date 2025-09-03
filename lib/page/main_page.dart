@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:svga_viewer/svgaplayer/svga_source.dart';
 import 'package:svga_viewer/theme/text_styles.dart';
 import 'package:svga_viewer/utils/file_open_handler.dart';
@@ -25,10 +26,16 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   String? currentFilePath;
+  String? version;
 
   @override
   void initState() {
     currentFilePath = widget.initialFile;
+    getVersion().then((v) {
+      setState(() {
+        version = v;
+      });
+    });
     super.initState();
     var path = currentFilePath;
     if (path != null && path.isNotEmpty) {
@@ -106,9 +113,26 @@ class _MainPageState extends State<MainPage> {
             right: 10,
             child: _buildMainTopBar(context),
           ),
+          Positioned(
+            right: 10,
+            bottom: 10,
+            child: Text(
+              "Author: JarryLeo \nVersion: $version",
+              style: const TextStyle(
+                fontSize: 13,
+                color: GColors.secondaryText,
+              ),
+              textAlign: TextAlign.right,
+            ),
+          )
         ],
       ),
     );
+  }
+
+  Future<String> getVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    return packageInfo.version;
   }
 
   Widget _buildMainTopBar(context) => Container(

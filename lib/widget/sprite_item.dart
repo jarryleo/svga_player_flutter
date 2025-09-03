@@ -140,7 +140,7 @@ class _SpriteInfoItemWidgetState extends State<SpriteInfoItemWidget> {
                     ),
                     Center(
                       child: Text(
-                        '文字',
+                        '文字预览',
                         style: TextStyle(
                           fontSize: widget.spriteInfo.textSize ?? 16.0,
                           color: widget.spriteInfo.textColor ?? Colors.black,

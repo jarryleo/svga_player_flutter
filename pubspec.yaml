@@ -43,6 +43,7 @@ dependencies:
   file_picker: ^8.3.0
   dotted_border: ^2.1.0 #虚线框
   args: ^2.7.0
+  package_info_plus: ^8.3.1
 
 
   # The following adds the Cupertino Icons font to your application.
