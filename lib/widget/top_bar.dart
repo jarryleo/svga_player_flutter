@@ -64,9 +64,9 @@ class _TopBarWidgetState extends State<TopBarWidget> {
                       trackColor: WidgetStateProperty.resolveWith<Color?>(
                             (Set<WidgetState> states) {
                           if (states.contains(WidgetState.selected)) {
-                            return GColors.mainColor.withValues(alpha: 0.3); // 选中时的轨道颜色
+                            return GColors.mainColor.withAlpha(77); // 选中时的轨道颜色
                           }
-                          return Colors.grey.withValues(alpha: 0.3); // 未选中时的轨道颜色
+                          return Colors.grey.withAlpha(77); // 未选中时的轨道颜色
                         },
                       ),
                       overlayColor: WidgetStateProperty.resolveWith<Color?>(
