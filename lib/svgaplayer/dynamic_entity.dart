@@ -4,7 +4,9 @@ import 'dart:ui' as ui show Image;
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
-import 'package:svga_viewer/svgaplayer/transformation/ImageTransformation.dart';
+import 'package:svga_viewer/svgaplayer/transformation/image_transformation.dart';
+
+import 'decode/image_decoder.dart';
 
 typedef SVGACustomDrawer = Function(Canvas canvas, int frameIndex);
 
@@ -23,9 +25,12 @@ class SVGADynamicEntity {
   }
 
   Future<void> setImageWithUrl(String url, String forKey,
-      {ImageTransformation? transformation}) async {
-    var image =
-        await decodeImageFromList((await get(Uri.parse(url))).bodyBytes);
+      {int? targetWidth,
+      int? targetHeight,
+      ImageTransformation? transformation}) async {
+    var resp = await get(Uri.parse(url));
+    var image = await ImageDecoder.decodeImage(resp.bodyBytes,
+        targetWidth: targetWidth, targetHeight: targetHeight);
     if (transformation != null) {
       image = await transformation.transform(image);
     }
@@ -33,9 +38,12 @@ class SVGADynamicEntity {
   }
 
   Future<void> setImageWithAssert(String assertPath, String forKey,
-      {ImageTransformation? transformation}) async {
+      {int? targetWidth,
+      int? targetHeight,
+      ImageTransformation? transformation}) async {
     var bytes = (await rootBundle.load(assertPath)).buffer.asUint8List();
-    var image = await decodeImageFromList(bytes);
+    var image = await ImageDecoder.decodeImage(bytes,
+        targetWidth: targetWidth, targetHeight: targetHeight);
     if (transformation != null) {
       image = await transformation.transform(image);
     }
@@ -43,9 +51,12 @@ class SVGADynamicEntity {
   }
 
   Future<void> setImageWithFile(File file, String forKey,
-      {ImageTransformation? transformation}) async {
+      {int? targetWidth,
+      int? targetHeight,
+      ImageTransformation? transformation}) async {
     var bytes = await file.readAsBytes();
-    var image = await decodeImageFromList(bytes);
+    var image = await ImageDecoder.decodeImage(bytes,
+        targetWidth: targetWidth, targetHeight: targetHeight);
     if (transformation != null) {
       image = await transformation.transform(image);
     }

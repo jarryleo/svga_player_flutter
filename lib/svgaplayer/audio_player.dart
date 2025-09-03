@@ -1,6 +1,7 @@
 import 'dart:typed_data';
-
+import 'package:flutter/cupertino.dart' show debugPrint;
 import 'package:flutter_soloud/flutter_soloud.dart';
+
 
 class AudioPlayerService {
   final _audioPlayer = SoLoud.instance;
@@ -35,10 +36,10 @@ class AudioPlayerService {
         if (sound == null) {
           return;
         }
-        print("replay $key");
+        debugPrint("replay $key");
         _soundHandle[key] = await _audioPlayer.play(sound);
       } catch (e) {
-        print(e);
+        debugPrint(e.toString());
       }
       return;
     }
@@ -46,7 +47,7 @@ class AudioPlayerService {
     if (sound == null) {
       return;
     }
-    print("play $key");
+    debugPrint("play $key");
     _soundHandle[key] = await _audioPlayer.play(sound);
   }
 
@@ -80,9 +81,9 @@ class AudioPlayerService {
       seek(key, position).then((_) {
         resume(key);
       });
-      print("playOnSeek: $position");
+      debugPrint("playOnSeek: $position");
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       stop(key).then((_) async {
         var sound = _sourceMap[key];
         if (sound == null) {
@@ -108,7 +109,7 @@ class AudioPlayerService {
     if (handle == null) {
       return;
     }
-    print('stop play $key');
+    debugPrint('stop play $key');
     _soundHandle.remove(key);
     await _audioPlayer.stop(handle);
   }
@@ -167,7 +168,7 @@ class AudioPlayerService {
     try {
       _audioPlayer.setGlobalVolume(v);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 

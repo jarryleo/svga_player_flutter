@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart' show debugPrint;
 import 'package:svga_viewer/svgaplayer/proto/svga.pb.dart';
 
 import 'cache/memory_cache.dart';
@@ -53,7 +54,7 @@ class SVGASource {
       var cacheKey = toString();
       var cache = MovieEntityCache.instance.get(cacheKey);
       if (cache?.isRelease == false) {
-        print('use memory cache : $cacheKey');
+        debugPrint('use memory cache : $cacheKey');
         return cache;
       } else {
         MovieEntityCache.instance.remove(cacheKey);

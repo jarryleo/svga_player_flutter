@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'ImageTransformation.dart';
+import 'image_transformation.dart';
 
 class CircleImageTransformation extends ImageTransformation {
   @override

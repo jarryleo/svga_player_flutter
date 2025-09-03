@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:svga_viewer/svgaplayer/transformation/ImageTransformation.dart';
+import 'package:svga_viewer/svgaplayer/transformation/image_transformation.dart';
 
 class SpriteInfo {
   final String name;

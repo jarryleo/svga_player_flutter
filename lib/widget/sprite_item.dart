@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:svga_viewer/svgaplayer/sprite_info.dart';
-import 'package:svga_viewer/svgaplayer/transformation/ImageTransformation.dart';
+import 'package:svga_viewer/svgaplayer/transformation/image_transformation.dart';
 import 'package:svga_viewer/theme/text_styles.dart';
 import 'package:svga_viewer/utils/snack_bar.dart';
 
-import '../svgaplayer/transformation/CircleImageTransformation.dart';
+import '../svgaplayer/transformation/circle_image_transformation.dart';
 import '../svgaplayer/utils.dart';
 
 // 修改 SpriteInfoWidget 类，添加新的回调函数参数

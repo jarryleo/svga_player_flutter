@@ -8,14 +8,11 @@ import 'package:flutter/rendering.dart';
 import 'package:path_drawing/path_drawing.dart';
 import 'package:svga_viewer/svgaplayer/utils.dart';
 
-import 'parser.dart';
 import 'proto/svga.pbserver.dart';
 import 'sprite_info.dart';
 import 'svga_source.dart';
 
 part 'painter.dart';
-
-part 'simple_player.dart';
 
 class SVGAImage extends StatefulWidget {
   final SVGAAnimationController _controller;
@@ -278,7 +275,7 @@ class _SVGAImageState extends State<SVGAImage> {
 
   @override
   void dispose() {
-    if(video?.autorelease == true){
+    if (video?.autorelease == true) {
       video?.dispose();
     }
     video = null;

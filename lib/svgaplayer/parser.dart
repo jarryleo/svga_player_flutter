@@ -4,12 +4,11 @@ import 'dart:ui' as ui;
 
 import 'package:archive/archive.dart' as archive;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/painting.dart' show decodeImageFromList;
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:http/http.dart' show get;
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'cache/http_cache_manager.dart';
+import 'decode/image_decoder.dart';
 import 'proto/svga.pbserver.dart';
 import 'sprite_info.dart';
 import 'utils.dart';
@@ -50,6 +49,7 @@ class SVGAParser {
       timeline.instant('MovieEntity.fromBuffer()',
           arguments: {'inflatedLength': inflatedBytes.length});
     }
+
     ///解析数据生产动画对象
     final movie = MovieEntity.fromBuffer(inflatedBytes);
     movie.fileSize = bytes.length;
@@ -69,11 +69,11 @@ class SVGAParser {
     for (var sprite in movieItem.sprites) {
       List<ShapeEntity>? lastShape;
       for (var frame in sprite.frames) {
-        if (frame.shapes.isNotEmpty && frame.shapes.isNotEmpty) {
+        if (frame.shapes.isNotEmpty) {
           if (frame.shapes[0].type == ShapeEntity_ShapeType.KEEP &&
               lastShape != null) {
             frame.shapes = lastShape;
-          } else if (frame.shapes.isNotEmpty == true) {
+          } else {
             lastShape = frame.shapes;
           }
         }
@@ -121,14 +121,15 @@ class SVGAParser {
   }
 
   Future<ui.Image?> _decodeImageItem(String key, Uint8List bytes,
-      {TimelineTask? timeline}) async {
+      {TimelineTask? timeline, int? targetWidth, int? targetHeight}) async {
     TimelineTask? task;
     if (!kReleaseMode) {
       task = TimelineTask(filterKey: _filterKey, parent: timeline)
         ..start('DecodeImage', arguments: {'key': key, 'length': bytes.length});
     }
     try {
-      final image = await decodeImageFromList(bytes);
+      final image = await ImageDecoder.decodeImage(bytes,
+          targetWidth: targetWidth, targetHeight: targetHeight);
       if (task != null) {
         task.finish(
           arguments: {'imageSize': '${image.width}x${image.height}'},
