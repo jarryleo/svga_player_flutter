@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:svga_viewer/svgaplayer/svga_source.dart';
@@ -10,6 +11,7 @@ import 'package:svga_viewer/utils/file_open_handler.dart';
 import 'package:svga_viewer/viewmodel/file_item.dart';
 import 'package:svga_viewer/viewmodel/svga_file_list_model.dart';
 import 'package:svga_viewer/widget/drag_file.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../theme/g_colors.dart';
 import 'view_page.dart';
@@ -124,10 +126,34 @@ class _MainPageState extends State<MainPage> {
               ),
               textAlign: TextAlign.right,
             ),
-          )
+          ),
+          Positioned(
+            left: 10,
+            bottom: 10,
+            child: kIsWeb ? GestureDetector(
+              onTap: () {
+                _launchUrl('https://github.com/jarryleo/svga_player_flutter');
+              },
+              child: const Text(
+                "Download",
+                style: TextStyle(
+                  fontSize: 13,
+                  color: GColors.valueText,
+                  decoration: TextDecoration.underline,
+                  decorationColor: GColors.valueText,
+                ),
+                textAlign: TextAlign.right,
+              ),
+            ) : const SizedBox.shrink(),
+          ),
         ],
       ),
     );
+  }
+
+  Future<void> _launchUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+    await launchUrl(uri);
   }
 
   Future<String> getVersion() async {
